@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Sampah - Trash2Cash</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Sidebar styles */
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background-color: #444444; /* Changed from #198754 to dark gray */
+            position: fixed;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            transition: all 0.3s ease-in-out;
+            background-color: #F5F5DC; /* Added cream background */
+        }
+        
+        /* When sidebar is toggled/collapsed */
+        body.sidebar-collapsed .sidebar {
+            margin-left: -280px;
+        }
+        
+        body.sidebar-collapsed .content {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: -280px;
+            }
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            body.sidebar-mobile-open .sidebar {
+                margin-left: 0;
+            }
+        }
+
+        /* Fix for sidebar menu items */
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border: none;
+            border-radius: 0 !important;
+            color: rgba(245, 245, 220, 0.8); /* Changed to cream */
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .sidebar .list-group-item.active {
+            background-color: rgba(245, 245, 220, 0.2); /* Changed to cream with opacity */
+            border-left: 3px solid #F5F5DC; /* Changed to cream */
+            color: #F5F5DC; /* Changed to cream */
+        }
+
+        .sidebar .list-group-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(245, 245, 220, 0.2); /* Changed to cream with opacity */
+            margin: 1rem 0;
+        }
+
+        /* Alert success styles */
+        .alert-success {
+            border: none;
+            border-radius: 1rem;
+            background: rgba(68, 68, 68, 0.1); /* Changed from #198754 to dark gray */
+            border-left: 4px solid #444444; /* Changed from #198754 to dark gray */
+            color: #333333; /* Changed to dark gray */
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-success {
+            background-color: #444444 !important; /* Changed from #198754 to dark gray */
+            border-color: #444444 !important; /* Changed from #198754 to dark gray */
+            color: #F5F5DC !important; /* Changed to cream */
+            box-shadow: 0 4px 6px rgba(68, 68, 68, 0.15); /* Changed from #198754 to dark gray */
+        }
+
+        .btn-success:hover {
+            background-color: #333333 !important; /* Darker version for hover */
+            border-color: #333333 !important; /* Darker version for hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(68, 68, 68, 0.2); /* Changed from #198754 to dark gray */
+        }
+        
+        .btn-secondary {
+            background-color: #F5F5DC !important; /* Changed to cream */
+            border-color: #E5E5CC !important; /* Slightly darker cream for border */
+            color: #333333 !important; /* Changed to dark gray */
+        }
+        .btn-secondary:hover {
+            background-color: #E5E5CC !important; /* Slightly darker cream for hover */
+            border-color: #D5D5BC !important;
+        }
+
+        .list-group-item {
+            padding: 1rem;
+            border: none;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .badge {
+            padding: 0.5em 1em;
+            font-weight: 500;
+            border-radius: 0.5rem;
+        }
+
+        /* Efek hover pada card */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Styling untuk file input */
+        .form-control[type="file"] {
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+        }
+
+        .form-control[type="file"]:hover {
+            background: #fff;
+            border-color: #198754;
+        }
+
+        /* Styling untuk textarea */
+        textarea.form-control {
+            min-height: 120px;
+            resize: none;
+        }
+
+        /* Label styling */
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Status badge styling */
+        .badge.bg-success {
+            background: rgba(68, 68, 68, 0.1) !important; /* Changed from #198754 to dark gray */
+            color: #444444 !important; /* Changed from #198754 to dark gray */
+        }
+
+        .badge.bg-warning {
+            background: rgba(255, 193, 7, 0.1) !important;
+            color: #ffc107;
+        }
+
+        /* Card header styling */
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Section spacing */
+        .mb-4 {
+            margin-bottom: 2rem !important;
+        }
+
+        /* Small text styling */
+        .text-muted {
+            font-size: 0.875rem;
+        }
+
+        /* Card */
+        .card {
+            background-color: white;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Text colors */
+        .text-success {
+            color: #444444 !important; /* Changed from #198754 to dark gray */
+        }
+        
+        /* Background colors */
+        .bg-success {
+            background-color: #444444 !important; /* Changed from #198754 to dark gray */
+        }
+        
+        /* Button outline */
+        .btn-outline-success {
+            color: #444444 !important; /* Changed from #198754 to dark gray */
+            border-color: #444444 !important; /* Changed from #198754 to dark gray */
+        }
+        .btn-outline-success:hover {
+            background-color: #444444 !important; /* Changed from #198754 to dark gray */
+            color: #F5F5DC !important; /* Changed to cream */
+        }
+        
+        /* Navbar */
+        .navbar {
+            background-color: #F5F5DC !important; /* Changed to cream */
+        }
+        
+        .navbar .nav-link {
+            color: #333333 !important; /* Changed to dark gray */
+        }
+        
+        /* Body */
+        body {
+            background-color: #F5F5DC; /* Changed to cream */
+            color: #333333; /* Changed to dark gray */
+        }
+        
+        /* Form tabs */
+        .nav-tabs .nav-link.active {
+            color: #444444; /* Changed from #198754 to dark gray */
+            border-bottom: 2px solid #444444; /* Changed from #198754 to dark gray */
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar text-white">
+            <div class="sidebar-header p-3 d-flex align-items-center gap-3">
+                <img src="/img/logo.png" alt="Logo" height="35" class="rounded">
+            </div>
+            
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label ps-3 mb-2">
+                    <small class="text-white-50 text-uppercase">Menu Utama</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="dashboard-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-home me-2"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="laporan-user.html" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        <span>Lapor Sampah</span>
+                    </a>
+                    <a href="history-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-history me-2"></i>
+                        <span>Riwayat</span>
+                    </a>
+                    <a href="poin-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-star me-2"></i>
+                        <span>Penukaran Poin</span>
+                    </a>
+                </div>
+
+                <div class="menu-label ps-3 mb-2 mt-4">
+                    <small class="text-white-50 text-uppercase">Setting</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="pengaturan-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog me-2"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-footer p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="https://ui-avatars.com/api/?name=User+Name" class="rounded-circle me-2" width="32">
+                    <div class="user-info">
+                        <h6 class="mb-0">User Name</h6>
+                        <small class="text-white-50">Member</small>
+                    </div>
+                </div>
+                <a href="#help" class="btn btn-outline-light btn-sm w-100">
+                    <i class="fas fa-question-circle me-2"></i>Bantuan
+                </a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white">
+                <div class="container-fluid">
+                    <button class="btn btn-link" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-2"></i>User Name
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="index.html">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid py-4">
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs mb-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#formLaporan">
+                            <i class="fas fa-plus-circle me-2"></i>Lapor Sampah
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#lihatLaporan">
+                            <i class="fas fa-chart-bar me-2"></i>Lihat Laporan
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Form Pelaporan Tab -->
+                    <div class="tab-pane fade show active" id="formLaporan">
+                        <div class="row">
+                            <div class="col-xl-8">
+                                <div class="card shadow">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-success">Form Lapor Sampah</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="row mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Jumlah Sampah (Kg)</label>
+                                                        <input type="number" class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Kategori Sampah</label>
+                                                        <select class="form-select" required>
+                                                            <option value="">Pilih kategori sampah...</option>
+                                                            <option>Plastik</option>
+                                                            <option>Kertas/Kardus</option>
+                                                            <option>Logam</option>
+                                                            <option>Kaca</option>
+                                                            <option>Elektronik</option>
+                                                            <option>Organik</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Tanggal Pengumpulan</label>
+                                                        <input type="date" class="form-control" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Lokasi Pengumpulan</label>
+                                                        <select class="form-select" required>
+                                                            <option value="">Pilih lokasi...</option>
+                                                            <option>Drop Point A</option>
+                                                            <option>Drop Point B</option>
+                                                            <option>Drop Point C</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Upload Foto Sampah</label>
+                                                <input type="file" class="form-control" accept="image/*" required>
+                                                <small class="text-muted">Format: JPG, PNG. Maksimal 2MB</small>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label">Catatan Tambahan</label>
+                                                <textarea class="form-control" rows="3" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
+                                            </div>
+
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-paper-plane me-2"></i>Kirim Laporan
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Informasi Bantuan -->
+                            <div class="col-xl-4">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-success">Panduan Pelaporan</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-success" role="alert">
+                                            <h6 class="alert-heading mb-1"><i class="fas fa-info-circle me-2"></i>Tips Pelaporan</h6>
+                                            <ul class="mb-0 ps-3 mt-2">
+                                                <li>Pisahkan sampah sesuai kategori</li>
+                                                <li>Bersihkan sampah sebelum disetor</li>
+                                                <li>Foto harus jelas dan menunjukkan jumlah sampah</li>
+                                                <li>Pilih lokasi pengumpulan terdekat</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <div class="card mb-3">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Estimasi Poin</h6>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Plastik
+                                                        <span class="badge bg-success">5 poin/Kg</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Kertas
+                                                        <span class="badge bg-success">3 poin/Kg</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Logam
+                                                        <span class="badge bg-success">10 poin/Kg</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Kaca
+                                                        <span class="badge bg-success">4 poin/Kg</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Organik
+                                                        <span class="badge bg-success">2 poin/Kg</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                        Elektronik
+                                                        <span class="badge bg-success">15 poin/Kg</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-outline-success" type="button">
+                                                <i class="fas fa-phone me-2"></i>Hubungi Admin
+                                            </button>
+                                            <button class="btn btn-outline-success" type="button">
+                                                <i class="fas fa-question-circle me-2"></i>FAQ
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Status Terakhir -->
+                                <div class="card shadow">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-success">Status Terakhir</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between mb-1">
+                                                    <h6 class="mb-1">Pengumpulan #SPH001</h6>
+                                                    <small class="text-muted">2 hari yang lalu</small>
+                                                </div>
+                                                <p class="mb-1">Plastik (3Kg)</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="badge bg-success">Diterima</span>
+                                                    <small class="text-success">+15 poin</small>
+                                                </div>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between mb-1">
+                                                    <h6 class="mb-1">Pengumpulan #SPH002</h6>
+                                                    <small class="text-muted">5 hari yang lalu</small>
+                                                </div>
+                                                <p class="mb-1">Kertas (2Kg)</p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="badge bg-warning text-dark">Menunggu</span>
+                                                    <small class="text-warning">Estimasi: +6 poin</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lihat Laporan Tab -->
+                    <div class="tab-pane fade" id="lihatLaporan">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                        <h6 class="m-0 font-weight-bold text-success">Laporan Setoran Sampah</h6>
+                                        <div class="d-flex gap-2">
+                                            <select class="form-select form-select-sm" style="width: auto">
+                                                <option>7 Hari Terakhir</option>
+                                                <option>30 Hari Terakhir</option>
+                                                <option>3 Bulan Terakhir</option>
+                                                <option>Semua Waktu</option>
+                                            </select>
+                                            <button class="btn btn-sm btn-success">
+                                                <i class="fas fa-file-pdf me-2"></i>Download PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Summary Cards -->
+                                        <div class="row mb-4">
+                                            <div class="col-md-3">
+                                                <div class="card bg-light">
+                                                    <div class="card-body">
+                                                        <h6 class="text-success">Total Sampah</h6>
+                                                        <h3 class="mb-0">15 Kg</h3>
+                                                        <small class="text-muted">Periode yang dipilih</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card bg-light">
+                                                    <div class="card-body">
+                                                        <h6 class="text-success">Total Poin</h6>
+                                                        <h3 class="mb-0">75</h3>
+                                                        <small class="text-muted">Periode yang dipilih</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card bg-light">
+                                                    <div class="card-body">
+                                                        <h6 class="text-success">Kategori Terbanyak</h6>
+                                                        <h3 class="mb-0">Plastik</h3>
+                                                        <small class="text-muted">5 Kg (33%)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card bg-light">
+                                                    <div class="card-body">
+                                                        <h6 class="text-success">Peringkat</h6>
+                                                        <h3 class="mb-0">#15</h3>
+                                                        <small class="text-muted">Dari 50 pengguna</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Graphs -->
+                                        <div class="row mb-4">
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">Kontribusi per Kategori</h6>
+                                                        <canvas id="categoryChart" height="250"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">Tren Kontribusi</h6>
+                                                        <canvas id="trendChart" height="250"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Detailed Table -->
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal</th>
+                                                        <th>ID</th>
+                                                        <th>Kategori</th>
+                                                        <th>Jumlah (Kg)</th>
+                                                        <th>Poin</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>15 Mar 2025</td>
+                                                        <td>#SPH001</td>
+                                                        <td>Plastik</td>
+                                                        <td>3</td>
+                                                        <td>15</td>
+                                                        <td><span class="badge bg-success">Diterima</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>12 Mar 2025</td>
+                                                        <td>#SPH002</td>
+                                                        <td>Kertas</td>
+                                                        <td>2</td>
+                                                        <td>6</td>
+                                                        <td><span class="badge bg-warning text-dark">Menunggu</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>25 Feb 2025</td>
+                                                        <td>#SPH003</td>
+                                                        <td>Logam</td>
+                                                        <td>1</td>
+                                                        <td>10</td>
+                                                        <td><span class="badge bg-success">Diterima</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>15 Feb 2025</td>
+                                                        <td>#SPH004</td>
+                                                        <td>Plastik</td>
+                                                        <td>4</td>
+                                                        <td>20</td>
+                                                        <td><span class="badge bg-success">Diterima</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>03 Feb 2025</td>
+                                                        <td>#SPH005</td>
+                                                        <td>Kaca</td>
+                                                        <td>2</td>
+                                                        <td>8</td>
+                                                        <td><span class="badge bg-success">Diterima</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>22 Jan 2025</td>
+                                                        <td>#SPH006</td>
+                                                        <td>Organik</td>
+                                                        <td>3</td>
+                                                        <td>6</td>
+                                                        <td><span class="badge bg-success">Diterima</span></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="table-light">
+                                                        <th colspan="3">Total</th>
+                                                        <th>15 Kg</th>
+                                                        <th>65 poin</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tambahan Script untuk Grafik -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Category Chart
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Plastik', 'Kertas', 'Logam', 'Kaca', 'Organik', 'Elektronik'],
+                    datasets: [{
+                        data: [7, 2, 1, 2, 3, 1.5],
+                        backgroundColor: ['#198754', '#ffc107', '#0dcaf0', '#6c757d', '#fd7e14', '#6610f2']
+                    }]
+                }
+            });
+            
+            // Trend Chart
+            new Chart(document.getElementById('trendChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                    datasets: [{
+                        label: 'Kontribusi Sampah (Kg)',
+                        data: [2, 5, 5, 0, 0, 0],
+                        borderColor: '#198754',
+                        tension: 0.1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+    <!-- QR Scanner Button -->
+    <div class="position-fixed bottom-0 end-0 p-4" style="z-index: 1030;">
+        <button class="btn btn-success btn-lg rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;" data-bs-toggle="modal" data-bs-target="#qrScannerModal">
+            <i class="fas fa-qrcode"></i>
+        </button>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Scan QR Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="qrScannerContainer" class="position-relative" style="min-height: 300px;">
+                        <video id="qrScanner" class="w-100"></video>
+                        <div class="position-absolute top-50 start-50 translate-middle text-center" id="qrScannerPlaceholder">
+                            <i class="fas fa-camera fa-3x text-muted mb-2"></i>
+                            <p>Meminta akses kamera...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // QR Scanner functionality
+        let videoStream;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize QR scanner when modal is shown
+            const qrScannerModal = document.getElementById('qrScannerModal');
+            qrScannerModal.addEventListener('shown.bs.modal', function() {
+                startQrScanner();
+            });
+            
+            // Stop camera when modal is hidden
+            qrScannerModal.addEventListener('hidden.bs.modal', function() {
+                stopQrScanner();
+            });
+        });
+        
+        function startQrScanner() {
+            const video = document.getElementById('qrScanner');
+            const placeholder = document.getElementById('qrScannerPlaceholder');
+            
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                    .then(function(stream) {
+                        videoStream = stream;
+                        video.srcObject = stream;
+                        video.play();
+                        placeholder.style.display = 'none';
+                        
+                        // Here you would typically add QR code detection logic
+                        console.log("QR scanner started - add QR detection library for full functionality");
+                        
+                        // Mock successful scan after 3 seconds (for demo)
+                        setTimeout(() => {
+                            alert("QR Code terdeteksi: DROP-POINT-001");
+                        }, 3000);
+                    })
+                    .catch(function(error) {
+                        placeholder.innerHTML = `<i class="fas fa-exclamation-circle fa-3x text-danger mb-2"></i>
+                                                <p>Gagal mengakses kamera: ${error.message}</p>`;
+                        console.error("Error accessing camera: ", error);
+                    });
+            } else {
+                placeholder.innerHTML = `<i class="fas fa-exclamation-circle fa-3x text-danger mb-2"></i>
+                                        <p>Browser tidak mendukung akses kamera</p>`;
+                console.error("Browser does not support getUserMedia");
+            }
+        }
+        
+        function stopQrScanner() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+        }
+
+        // Script to handle sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    
+                    // For mobile
+                    if (window.innerWidth < 992) {
+                        document.body.classList.toggle('sidebar-mobile-open');
+                    }
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992 && 
+                    !event.target.closest('.sidebar') && 
+                    !event.target.closest('#sidebarToggle') && 
+                    document.body.classList.contains('sidebar-mobile-open')) {
+                    document.body.classList.remove('sidebar-mobile-open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

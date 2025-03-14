@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tim Trash2Cash - Platform Pengelolaan Sampah Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tambahan CSS untuk animasi -->
+    <style>
+        :root {
+            --primary-color: #444444;
+            --secondary-color: #F5F5DC;
+            --text-dark: #333333;
+            --text-light: #F5F5DC;
+            --hover-dark: #333333;
+            --hover-light: #e5e5cc;
+        }
+        
+        .team-grid {
+            padding: 60px 0;
+        }
+        /* Penyempurnaan Kartu Tim */
+        .team-member {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--secondary-color);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(68, 68, 68, 0.15);
+        }
+        
+        .member-img {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .member-img::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .team-member:hover .member-img::after {
+            opacity: 1;
+        }
+        
+        .member-img img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .team-member:hover .member-img img {
+            transform: scale(1.08);
+        }
+        
+        .member-info {
+            padding: 30px 25px;
+            text-align: center;
+            background: linear-gradient(to bottom, var(--secondary-color), #e5e5cc);
+        }
+        
+        .member-info h4 {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            font-size: 1.25rem;
+        }
+        
+        .member-role {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 12px 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .member-desc {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .member-social a {
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(68, 68, 68, 0.1);
+        }
+        
+        .member-social a:hover {
+            transform: translateY(-3px) rotate(8deg);
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+        
+        /* Penyempurnaan Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 0 15px;
+        }
+        
+        .section-subtitle {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(68, 68, 68, 0.1);
+            border-radius: 20px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Override Bootstrap classes */
+        .bg-success {
+            background-color: var(--primary-color) !important;
+        }
+        
+        .text-success {
+            color: var(--primary-color) !important;
+        }
+        
+        .btn-success {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        .btn-success:hover {
+            background-color: var(--hover-dark);
+            border-color: var(--hover-dark);
+        }
+        
+        .btn-outline-success {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline-success:hover {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-dark);
+        }
+        
+        .hero-section-small {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--hover-dark) 100%);
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        .modal-content {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="img/logo.png" alt="Trash2Cash" height="40" class="me-2">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item dropdown nav-item-animated">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-info-circle me-1"></i> Informasi
+                        </a>
+                        <ul class="dropdown-menu animated-dropdown">
+                            <li><a class="dropdown-item" href="about.html"><i class="fas fa-building me-2"></i>Tentang Kami</a></li>
+                            <li><a class="dropdown-item" href="metodologi.html"><i class="fas fa-clipboard-list me-2"></i>Metodologi</a></li>
+                            <li><a class="dropdown-item" href="team.html"><i class="fas fa-users me-2"></i>Tim Kami</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link" href="contact.html"><i class="fas fa-phone me-1"></i> Kontak</a>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link btn" href="register.html">
+                            <i class="fas fa-user-plus me-1"></i> Daftar
+                        </a>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fas fa-sign-in-alt me-1"></i> Masuk
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section dengan Background Modern -->
+    <div class="hero-section-small position-relative" style="background: linear-gradient(135deg, #E6D5B8 0%, #5E5E5E 100%); color: #F5F5DC;">
+        <div class="container py-5 mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center text-white">
+                    <h1 class="display-4 fw-bold mb-3">Tim Trash2Cash</h1>
+                    <p class="lead">Mengenal lebih dekat dengan tim hebat yang berdedikasi untuk mengembangkan platform pengelolaan sampah digital</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <section class="team-grid">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">PERKENALKAN</span>
+                <h2 class="mb-4">Tim Pengembang Trash2Cash</h2>
+                <p class="text-muted">Kami adalah mahasiswa Universitas Siliwangi jurusan Informatika yang berkolaborasi untuk menciptakan solusi pengelolaan sampah berkelanjutan</p>
+            </div>
+
+            <!-- Baris Pertama - 3 Kartu -->
+            <div class="row g-4 justify-content-center">
+                <!-- Anggota 1 - Delely as Ketua Tim -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="img/team/rovi.jpg" alt="Delely Rahmawati Hidayah">
+                        </div>
+                        <div class="member-info">
+                            <h4>Delely Rahmawati Hidayah</h4>
+                            <p class="member-role">Ketua Tim</p>
+                            <p class="member-desc">237006006 - Memimpin dan mengkoordinasikan seluruh aspek pengembangan platform Trash2Cash</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anggota 2 - Desti as UI/UX Designer -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="img/team/rovi.jpg" alt="Desti Karmini Nurdatillah">
+                        </div>
+                        <div class="member-info">
+                            <h4>Desti Karmini Nurdatillah</h4>
+                            <p class="member-role">UI/UX Designer</p>
+                            <p class="member-desc">237006001 - Merancang antarmuka pengguna yang intuitif dan pengalaman pengguna yang optimal</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anggota 3 - Shinvi as System Analyst -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="img/team/rovi.jpg" alt="Shinvi Nur Najmil Jannah">
+                        </div>
+                        <div class="member-info">
+                            <h4>Shinvi Nur Najmil Jannah</h4>
+                            <p class="member-role">System Analyst</p>
+                            <p class="member-desc">237006008 - Menganalisis kebutuhan sistem dan merencanakan pengembangan platform</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baris Kedua - 2 Kartu -->
+            <div class="row g-4 justify-content-center mt-4">
+                <!-- Anggota 4 - Rovi as Frontend Developer -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="img/team/rovi.jpg" alt="Rovi Fauzan">
+                        </div>
+                        <div class="member-info">
+                            <h4>Rovi Fauzan</h4>
+                            <p class="member-role">Frontend Developer</p>
+                            <p class="member-desc">237006022 - Mengembangkan antarmuka web responsif dan aplikasi mobile Trash2Cash</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anggota 5 - Khilqi as Backend Developer -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="team-member">
+                        <div class="member-img">
+                            <img src="img/team/rovi.jpg" alt="Muhamad Khilqi Alfadillah">
+                        </div>
+                        <div class="member-info">
+                            <h4>Muhamad Khilqi Alfadillah</h4>
+                            <p class="member-role">Backend Developer</p>
+                            <p class="member-desc">237006036 - Mengembangkan sistem backend dan database untuk platform Trash2Cash</p>
+                            <div class="member-social">
+                                <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-github fa-lg"></i></a>
+                                <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-about">
+                        <img src="img/logo.png" alt="Trash2Cash" height="40" class="mb-3">
+                        <h5 class="text-white">Trash2Cash</h5>
+                        <p class="text-light">Platform digital untuk pengelolaan sampah berbasis insentif dengan sistem drop point terintegrasi</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-4">Tautan Cepat</h5>
+                    <ul class="footer-links">
+                        <li><a href="about.html">Tentang Kami</a></li>
+                        <li><a href="metodologi.html">Metodologi</a></li>
+                        <li><a href="team.html">Tim Kami</a></li>
+                        <li><a href="contact.html">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Kontak Kami</h5>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> Tasikmalaya</li>
+                        <li><i class="fas fa-phone"></i> +62 123 4567 890</li>
+                        <li><i class="fas fa-envelope"></i> info@trash2cash.com</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Media Sosial</h5>
+                    <div class="footer-social">
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4 border-light">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-light mb-0">© 2025 Trash2Cash. Hak Cipta Dilindungi.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light me-3">Kebijakan Privasi</a>
+                    <a href="#" class="text-light">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tambahkan Floating Action Button -->
+    <div class="floating-action-button">
+        <button class="btn btn-success rounded-circle" data-bs-toggle="modal" data-bs-target="#helpModal">
+            <i class="fas fa-question"></i>
+        </button>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Butuh Bantuan?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-2">
+                        <a href="https://wa.me/1234567890" class="btn btn-success">
+                            <i class="fab fa-whatsapp me-2"></i>Chat WhatsApp
+                        </a>
+                        <a href="tel:1234567890" class="btn btn-outline-success">
+                            <i class="fas fa-phone me-2"></i>Telepon
+                        </a>
+                        <a href="mailto:help@Trash2Cash.com" class="btn btn-outline-success">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"></h5>
+                        <i class="fas fa-user-circle me-2"></i>Masuk ke Trash2Cash
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Logo di tengah -->
+                    <div class="text-center mb-4">
+                        <img src="img/logo.png" alt="Trash2Cash" height="60">
+                    </div>
+                    
+                    <form id="loginForm" onsubmit="return handleLogin(event)">
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-user me-2"></i>Username
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control" id="username" required 
+                                       placeholder="Masukkan username Anda">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" required
+                                       placeholder="Masukkan password Anda">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Checkbox Remember Me -->
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Ingat saya</label>
+                            <a href="#" class="float-end text-success">Lupa password?</a>
+                        </div>
+
+                        <div class="alert alert-danger d-none" id="loginError">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Username atau password salah!
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Masuk
+                        </button>
+
+                        <div class="text-center">
+                            <p class="mb-0">Belum punya akun? 
+                                <a href="register.html" class="text-success">Daftar sekarang</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-indicator"></div>
+    <script>
+        // Tambahkan fungsi handleLogin
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+            
+            // Simulasi login sederhana
+            if (username === 'admin' && password === 'admin') {
+                window.location.href = '/dashboard-admin.html';
+                return false;
+            } else if (username === 'user' && password === 'user') {
+                window.location.href = '/dashboard-user.html';
+                return false;
+            } else {
+                errorElement.classList.remove('d-none');
+                return false;
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

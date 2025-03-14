@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan - Trash2Cash</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Sidebar styles */
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background-color: #444444; /* Changed from #198754 to dark gray */
+            position: fixed;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            transition: all 0.3s ease-in-out;
+            background-color: #F5F5DC; /* Added cream background */
+        }
+        
+        /* When sidebar is toggled/collapsed */
+        body.sidebar-collapsed .sidebar {
+            margin-left: -280px;
+        }
+        
+        body.sidebar-collapsed .content {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: -280px;
+            }
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            body.sidebar-mobile-open .sidebar {
+                margin-left: 0;
+            }
+        }
+
+        /* Fix for sidebar menu items */
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border: none;
+            border-radius: 0 !important;
+            color: rgba(245, 245, 220, 0.8); /* Changed to cream */
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .sidebar .list-group-item.active {
+            background-color: rgba(245, 245, 220, 0.2); /* Changed to cream with opacity */
+            border-left: 3px solid #F5F5DC; /* Changed to cream */
+            color: #F5F5DC; /* Changed to cream */
+        }
+
+        .sidebar .list-group-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(245, 245, 220, 0.2); /* Changed to cream with opacity */
+            margin: 1rem 0;
+        }
+
+        /* Form styling */
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333333; /* Changed to dark gray */
+        }
+        
+        .form-control, .form-select {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e9ecef;
+            background-color: white;
+            color: #333333; /* Changed to dark gray */
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #444444; /* Changed from #198754 to dark gray */
+            box-shadow: 0 0 0 0.2rem rgba(68, 68, 68, 0.15); /* Changed from #198754 to dark gray */
+        }
+        
+        /* Card styling */
+        .card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* Nav tabs */
+        .nav-tabs .nav-link {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            color: #6c757d;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #444444; /* Changed from #198754 to dark gray */
+            border-bottom: 2px solid #444444; /* Changed from #198754 to dark gray */
+            background: transparent;
+        }
+        
+        /* Switch styling */
+        .form-switch .form-check-input {
+            width: 3em;
+            height: 1.5em;
+            margin-top: 0;
+        }
+        
+        .form-switch .form-check-input:checked {
+            background-color: #444444; /* Changed from #198754 to dark gray */
+            border-color: #444444; /* Changed from #198754 to dark gray */
+        }
+        
+        /* Button styling */
+        .btn-success {
+            background-color: #444444 !important; /* Changed from #198754 to dark gray */
+            border-color: #444444 !important; /* Changed from #198754 to dark gray */
+            color: #F5F5DC !important; /* Changed to cream */
+        }
+        
+        .btn-success:hover {
+            background-color: #333333 !important; /* Darker version for hover */
+            border-color: #333333 !important; /* Darker version for hover */
+        }
+        
+        .btn-outline-success {
+            color: #444444 !important; /* Changed from #198754 to dark gray */
+            border-color: #444444 !important; /* Changed from #198754 to dark gray */
+        }
+        
+        .btn-outline-success:hover {
+            background-color: #444444 !important; /* Changed from #198754 to dark gray */
+            color: #F5F5DC !important; /* Changed to cream */
+        }
+        
+        .btn-secondary {
+            background-color: #F5F5DC !important; /* Changed to cream */
+            border-color: #E5E5CC !important; /* Slightly darker cream for border */
+            color: #333333 !important; /* Changed to dark gray */
+        }
+        
+        .btn-secondary:hover {
+            background-color: #E5E5CC !important; /* Slightly darker cream for hover */
+            border-color: #D5D5BC !important; /* Even darker cream for border on hover */
+        }
+        
+        /* Badge styling */
+        .badge.bg-success {
+            background-color: rgba(68, 68, 68, 0.1) !important; /* Changed from #198754 to dark gray */
+            color: #444444 !important; /* Changed from #198754 to dark gray */
+        }
+        
+        .badge.bg-danger {
+            background-color: rgba(220, 53, 69, 0.1) !important; /* Keeping the danger color but with opacity */
+            color: #dc3545 !important;
+        }
+        
+        /* Text colors */
+        .text-success {
+            color: #444444 !important; /* Changed from #198754 to dark gray */
+        }
+        
+        /* Background colors */
+        .bg-light {
+            background-color: #F5F5DC !important; /* Changed to cream */
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            background-color: #F5F5DC !important; /* Changed to cream */
+        }
+        
+        .navbar .nav-link {
+            color: #333333 !important; /* Changed to dark gray */
+        }
+        
+        /* Table styling */
+        .table {
+            color: #333333; /* Changed to dark gray */
+        }
+        
+        .table thead th {
+            background-color: #F5F5DC; /* Changed to cream */
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(68, 68, 68, 0.05); /* Changed hover color */
+        }
+        
+        /* Body styling */
+        body {
+            background-color: #F5F5DC; /* Changed to cream */
+            color: #333333; /* Changed to dark gray */
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar text-white">
+            <div class="sidebar-header p-3 d-flex align-items-center gap-3">
+                <img src="/img/logo.png" alt="Logo" height="35" class="rounded">
+            </div>
+            
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label ps-3 mb-2">
+                    <small class="text-white-50 text-uppercase">Menu Utama</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="dashboard-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-home me-2"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="laporan-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        <span>Lapor Sampah</span>
+                    </a>
+                    <a href="history-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-history me-2"></i>
+                        <span>Riwayat</span>
+                    </a>
+                    <a href="poin-user.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-star me-2"></i>
+                        <span>Penukaran Poin</span>
+                    </a>
+                </div>
+
+                <div class="menu-label ps-3 mb-2 mt-4">
+                    <small class="text-white-50 text-uppercase">Setting</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="pengaturan-user.html" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-cog me-2"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-footer p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="https://ui-avatars.com/api/?name=User+Name" class="rounded-circle me-2" width="32">
+                    <div class="user-info">
+                        <h6 class="mb-0">User Name</h6>
+                        <small class="text-white-50">Member</small>
+                    </div>
+                </div>
+                <a href="#help" class="btn btn-outline-light btn-sm w-100">
+                    <i class="fas fa-question-circle me-2"></i>Bantuan
+                </a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white">
+                <div class="container-fluid">
+                    <button class="btn btn-link" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user me-2"></i>User Name
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="index.html">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid py-4">
+                <!-- Header Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h5 class="text-success mb-1">Pengaturan Akun</h5>
+                                <p class="text-muted">Kustomisasi pengalaman Anda dengan Trash2Cash</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs mb-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#profileSettings">
+                            <i class="fas fa-user-circle me-2"></i>Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#securitySettings">
+                            <i class="fas fa-shield-alt me-2"></i>Keamanan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#notificationSettings">
+                            <i class="fas fa-bell me-2"></i>Notifikasi
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Profile Settings Tab -->
+                    <div class="tab-pane fade show active" id="profileSettings">
+                        <div class="row">
+                            <div class="col-lg-4 mb-4">
+                                <div class="card shadow">
+                                    <div class="card-body text-center">
+                                        <div class="position-relative d-inline-block mb-3">
+                                            <img src="https://ui-avatars.com/api/?name=User+Name&size=150" class="rounded-circle" alt="Profile Picture">
+                                            <button class="btn btn-sm btn-success position-absolute bottom-0 end-0 rounded-circle">
+                                                <i class="fas fa-camera"></i>
+                                            </button>
+                                        </div>
+                                        <h5 class="mb-1">User Name</h5>
+                                        <p class="text-muted mb-3">Member sejak Januari 2025</p>
+                                        <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
+                                            <span class="badge bg-success">Silver</span>
+                                            <span class="text-success"><i class="fas fa-star me-1"></i>250 poin</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-success">Informasi Pribadi</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form></form>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6 mb-3 mb-md-0">
+                                                    <label class="form-label">Nama Depan</label>
+                                                    <input type="text" class="form-control" value="User">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Nama Belakang</label>
+                                                    <input type="text" class="form-control" value="Name">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" class="form-control" value="user@example.com">
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Nomor Telepon</label>
+                                                <input type="tel" class="form-control" value="081234567890">
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Alamat</label>
+                                                <textarea class="form-control" rows="3">Jl. Contoh No. 123, Jakarta</textarea>
+                                            </div>
+                                            
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-save me-2"></i>Simpan Perubahan
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Settings Tab -->
+                    <div class="tab-pane fade" id="securitySettings">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-success">Ubah Password</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label class="form-label">Password Lama</label>
+                                                <input type="password" class="form-control">
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Password Baru</label>
+                                                <input type="password" class="form-control">
+                                                <small class="text-muted">Minimal 8 karakter dengan kombinasi huruf, angka, dan simbol</small>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Konfirmasi Password Baru</label>
+                                                <input type="password" class="form-control">
+                                            </div>
+                                            
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-lock me-2"></i>Perbarui Password
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-success">Verifikasi Dua Faktor</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="two-factor">
+                                            <label class="form-check-label" for="two-factor">Aktifkan verifikasi dua faktor</label>
+                                        </div>
+                                        <p class="text-muted">Dengan mengaktifkan verifikasi dua faktor, Anda akan menerima kode OTP melalui SMS/Email setiap login</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="card shadow">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-success">Riwayat Login</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tanggal & Waktu</th>
+                                                        <th>Perangkat</th>
+                                                        <th>Lokasi</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>15 Mar 2025, 14:30</td>
+                                                        <td>Chrome di Windows</td>
+                                                        <td>Jakarta, Indonesia</td>
+                                                        <td><span class="badge bg-success">Sukses</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>10 Mar 2025, 09:15</td>
+                                                        <td>Safari di iOS</td>
+                                                        <td>Jakarta, Indonesia</td>
+                                                        <td><span class="badge bg-success">Sukses</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>05 Mar 2025, 20:45</td>
+                                                        <td>Firefox di Windows</td>
+                                                        <td>Bandung, Indonesia</td>
+                                                        <td><span class="badge bg-danger">Gagal</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Settings Tab -->
+                    <div class="tab-pane fade" id="notificationSettings">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-success">Pengaturan Notifikasi</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <h6 class="font-weight-bold">Metode Notifikasi</h6>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="email-notif" checked>
+                                        <label class="form-check-label" for="email-notif">Email</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="sms-notif">
+                                        <label class="form-check-label" for="sms-notif">SMS</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="push-notif" checked>
+                                        <label class="form-check-label" for="push-notif">Notifikasi Push (Web)</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="whatsapp-notif">
+                                        <label class="form-check-label" for="whatsapp-notif">WhatsApp</label>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="font-weight-bold">Jenis Pemberitahuan</h6>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="status-update" checked>
+                                        <label class="form-check-label" for="status-update">Update Status Pengumpulan Sampah</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="point-update" checked>
+                                        <label class="form-check-label" for="point-update">Perubahan Poin</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="promotion-notif">
+                                        <label class="form-check-label" for="promotion-notif">Promo dan Penawaran Khusus</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input" type="checkbox" id="reward-update" checked>
+                                        <label class="form-check-label" for="reward-update">Update Status Reward</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="news-update" checked>
+                                        <label class="form-check-label" for="news-update">Berita dan Tips Lingkungan</label>
+                                    </div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-4">
+                                    <h6 class="font-weight-bold">Frekuensi Notifikasi</h6>
+                                    <select class="form-select">
+                                        <option>Langsung (real-time)</option>
+                                        <option>Rangkuman Harian</option>
+                                        <option>Rangkuman Mingguan</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-success">
+                                        <i class="fas fa-save me-2"></i>Simpan Pengaturan Notifikasi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Scanner Button -->
+    <div class="position-fixed bottom-0 end-0 p-4" style="z-index: 1030;">
+        <button class="btn btn-success btn-lg rounded-circle shadow" style="width: 60px; height: 60px;" data-bs-toggle="modal" data-bs-target="#qrScannerModal">
+            <i class="fas fa-qrcode"></i>
+        </button>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Scan QR Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="qrScannerContainer" class="position-relative" style="min-height: 300px;">
+                        <video id="qrScanner" class="w-100"></video>
+                        <div class="position-absolute top-50 start-50 translate-middle text-center" id="qrScannerPlaceholder">
+                            <i class="fas fa-camera fa-3x text-muted mb-2"></i>
+                            <p>Meminta akses kamera...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/dashboard.js"></script>
+    
+    <script>
+        // QR Scanner functionality
+        let videoStream;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize QR scanner when modal is shown
+            const qrScannerModal = document.getElementById('qrScannerModal');
+            qrScannerModal.addEventListener('shown.bs.modal', function() {
+                startQrScanner();
+            });
+            
+            // Stop camera when modal is hidden
+            qrScannerModal.addEventListener('hidden.bs.modal', function() {
+                stopQrScanner();
+            });
+        });
+        
+        function startQrScanner() {
+            const video = document.getElementById('qrScanner');
+            const placeholder = document.getElementById('qrScannerPlaceholder');
+            
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                    .then(function(stream) {
+                        videoStream = stream;
+                        video.srcObject = stream;
+                        video.play();
+                        placeholder.style.display = 'none';
+                        
+                        // Here you would typically add QR code detection logic
+                        console.log("QR scanner started - add QR detection library for full functionality");
+                        
+                        // Mock successful scan after 3 seconds (for demo)
+                        setTimeout(() => {
+                            alert("QR Code terdeteksi: DROP-POINT-001");
+                        }, 3000);
+                    })
+                    .catch(function(error) {
+                        placeholder.innerHTML = `<i class="fas fa-exclamation-circle fa-3x text-danger mb-2"></i>
+                                                <p>Gagal mengakses kamera: ${error.message}</p>`;
+                        console.error("Error accessing camera: ", error);
+                    });
+            } else {
+                placeholder.innerHTML = `<i class="fas fa-exclamation-circle fa-3x text-danger mb-2"></i>
+                                        <p>Browser tidak mendukung akses kamera</p>`;
+                console.error("Browser does not support getUserMedia");
+            }
+        }
+        
+        function stopQrScanner() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+        }
+    </script>
+    
+    <script>
+        // Script to handle sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    
+                    // For mobile
+                    if (window.innerWidth < 992) {
+                        document.body.classList.toggle('sidebar-mobile-open');
+                    }
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992 && 
+                    !event.target.closest('.sidebar') && 
+                    !event.target.closest('#sidebarToggle') && 
+                    document.body.classList.contains('sidebar-mobile-open')) {
+                    document.body.classList.remove('sidebar-mobile-open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Trash2Cash - Platform Pengelolaan Sampah Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* Preloader styling */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .preloader.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Perbaikan visual untuk cards */
+        .content-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        /* Efek hover untuk mission list */
+        .mission-list li {
+            transition: all 0.3s ease;
+            cursor: default;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: calc(0.1s * var(--item-index));
+        }
+        
+        .mission-list li:hover {
+            transform: translateX(10px);
+            color: var(--primary-green);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animasi icon di goal card */
+        .goal-card .icon-circle {
+            transition: all 0.3s ease;
+        }
+        
+        .goal-card:hover .icon-circle {
+            transform: rotate(360deg);
+            background: var(--primary-green);
+            color: white;
+        }
+        
+        /* Efek hover untuk impact items */
+        .impact-item {
+            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .impact-item:hover {
+            background: var(--light-green);
+            transform: translateX(10px);
+        }
+
+        .impact-item i {
+            transition: transform 0.3s ease;
+        }
+
+        .impact-item:hover i {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        /* Perbaikan spacing untuk hero section */
+        .hero-section-small {
+            padding: 8rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+
+        /* Tambahkan overlay gradient */
+        .hero-section-small::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(25, 135, 84, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        /* Animasi text */
+        .hero-section-small h1 {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-section-small h1::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary-green);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .hero-section-small h1:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Efek hover yang lebih menarik untuk goal cards */
+        .goal-card {
+            position: relative;
+            z-index: 1;
+        }
+
+        .goal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary-green);
+            border-radius: 10px;
+            z-index: -1;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .goal-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .goal-card:hover {
+            color: white;
+        }
+
+        .goal-card:hover .icon-circle {
+            background: white;
+        }
+
+        .goal-card:hover .icon-circle i {
+            color: var(--primary-green);
+        }
+
+        /* Efek loading skeleton untuk gambar */
+        .img-fluid {
+            position: relative;
+            min-height: 300px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-green);
+            transform-origin: left;
+            z-index: 9999;
+        }
+
+        /* Timeline styling yang diperbaiki */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(180deg, transparent, var(--primary-green), transparent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4rem;
+            position: relative;
+            width: 50%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 3rem;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 3rem;
+        }
+
+        .timeline-badge {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            transition: all 0.4s ease;
+            position: absolute;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-badge {
+            right: -60px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-badge {
+            left: -60px;
+        }
+
+        .timeline-badge::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50%;
+            z-index: -1;
+            transition: all 0.4s ease;
+            opacity: 0.3;
+            transform: scale(1.2);
+        }
+
+        .timeline-badge .date {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0;
+            line-height: 1;
+        }
+
+        .timeline-badge .month {
+            font-size: 1rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .timeline-badge .year {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            transform: rotate(45deg);
+            top: 50%;
+            margin-top: -10px;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -10px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -10px;
+        }
+
+        .timeline-content h4 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .timeline-item:hover .timeline-badge {
+            transform: scale(1.1); /* Hapus efek rotate */
+            box-shadow: 0 0 20px rgba(25, 135, 84, 0.4);
+        }
+
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 50px; /* Sesuaikan posisi garis timeline */
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 100px !important; /* Tambah padding */
+                padding-right: 1rem !important;
+                margin-bottom: 3rem;
+            }
+            
+            .timeline-badge {
+                left: 0 !important; /* Reset posisi badge */
+                width: 90px; /* Sesuaikan ukuran */
+                height: 90px;
+                position: absolute;
+            }
+            
+            .timeline-content {
+                width: 100%;
+            }
+            
+            .timeline-content::before {
+                display: none; /* Hapus arrow */
+            }
+            
+            /* Perbaikan ukuran font untuk mobile */
+            .timeline-badge .date {
+                font-size: 1.75rem;
+            }
+            
+            .timeline-badge .month {
+                font-size: 0.9rem;
+            }
+            
+            .timeline-badge .year {
+                font-size: 1rem;
+            }
+            
+            /* Hapus alternansi layout di mobile */
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-badge,
+            .timeline-item:nth-child(even) .timeline-badge {
+                left: 0 !important;
+            }
+        }
+
+        /* Tambahkan smooth transition untuk responsivitas */
+        .timeline-item, .timeline-badge, .timeline-content {
+            transition: all 0.3s ease;
+        }
+
+        /* Stat card yang diperbaiki */
+        .stat-card {
+            padding: 2.5rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Center align navbar items in mobile view */
+        @media (max-width: 991.98px) {
+            .navbar-collapse .navbar-nav {
+                text-align: center;
+            }
+            
+            .navbar-collapse .dropdown-menu {
+                text-align: center;
+                border: none;
+                background-color: white; /* Set background color to white */
+            }
+
+            .navbar-collapse .nav-item.dropdown .dropdown-toggle {
+                text-align: center;
+                display: block;
+                width: 100%;
+            }
+            
+            .navbar-collapse .dropdown-menu .dropdown-item {
+                text-align: center;
+                padding-left: 0;
+                padding-right: 0;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .navbar-collapse .dropdown-item i {
+                display: inline-block;
+                margin-right: 0.5rem;
+            }
+        }
+
+        /* Add or update this rule */
+        .footer {
+            background-color: var(--primary-color); /* #444444 */
+            color: var(--text-light);
+        }
+        
+        /* If you have this CSS variable, make sure it's defined */
+        :root {
+            --primary-color: #444444;
+            --text-light: #F5F5DC;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="img/logo.png" alt="Trash2Cash" height="40" class="me-2">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item dropdown nav-item-animated">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-info-circle me-1"></i> Informasi
+                        </a>
+                        <ul class="dropdown-menu animated-dropdown">
+                            <li><a class="dropdown-item" href="about.html"><i class="fas fa-building me-2"></i>Tentang Kami</a></li>
+                            <li><a class="dropdown-item" href="metodologi.html"><i class="fas fa-clipboard-list me-2"></i>Metodologi</a></li>
+                            <li><a class="dropdown-item" href="team.html"><i class="fas fa-users me-2"></i>Tim Kami</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link" href="contact.html"><i class="fas fa-phone me-1"></i> Kontak</a>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link btn" href="register.html">
+                            <i class="fas fa-user-plus me-1"></i> Daftar
+                        </a>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fas fa-sign-in-alt me-1"></i> Masuk
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Hero Section -->
+    <div class="hero-section-small" style="background-color: #F5F1E8;" data-aos="fade-up">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto text-center">
+                    <h1 class="text-success mb-4">Tentang Trash2Cash</h1>
+                    <p class="lead">Platform digital inovatif untuk pengelolaan sampah berbasis insentif yang memudahkan masyarakat berkontribusi dalam menjaga kebersihan lingkungan</p>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <!-- Vision Mission Section -->
+    <section class="section" data-aos="fade-up">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6" data-aos="fade-right" data-aos-delay="100">
+                    <div class="content-card">
+                        <h3 class="mb-4"><i class="fas fa-eye text-success me-2"></i>Visi</h3>
+                        <p>Mewujudkan sistem pengelolaan sampah yang terintegrasi dengan teknologi digital untuk menciptakan lingkungan yang bersih dan berkelanjutan melalui partisipasi aktif masyarakat.</p>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left" data-aos-delay="200">
+                    <div class="content-card">
+                        <h3 class="mb-4"><i class="fas fa-bullseye text-success me-2"></i>Misi</h3>
+                        <ul class="mission-list">
+                            <li>Meningkatkan kesadaran masyarakat dalam memilah dan mendaur ulang sampah</li>
+                            <li>Membangun sistem drop point yang mudah diakses oleh masyarakat</li>
+                            <li>Memberikan insentif kepada masyarakat untuk berpartisipasi dalam pengelolaan sampah</li>
+                            <li>Menjalin kemitraan dengan bank sampah, perusahaan daur ulang, dan pihak terkait</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="section bg-light" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Perjalanan Kami</h2>
+            <div class="timeline">
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-badge">
+                        <span class="date">01</span>
+                        <span class="month">Maret</span>
+                        <span class="year">2025</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Awal Mula</h4>
+                        <p>Identifikasi masalah pengelolaan sampah dan konseptualisasi platform Trash2Cash</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-badge">
+                        <span class="date">04</span>
+                        <span class="month">Maret</span>
+                        <span class="year">2025</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Riset & Pengembangan</h4>
+                        <p>Studi literatur dan pembuatan desain aplikasi Trash2Cash dengan fitur utama</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-right">
+                    <div class="timeline-badge">
+                        <span class="date">08</span>
+                        <span class="month">Maret</span>
+                        <span class="year">2025</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Pengembangan Kemitraan</h4>
+                        <p>Identifikasi dan menjalin kemitraan dengan bank sampah dan perusahaan daur ulang</p>
+                    </div>
+                </div>
+                <div class="timeline-item" data-aos="fade-left">
+                    <div class="timeline-badge">
+                        <span class="date">14</span>
+                        <span class="month">Maret</span>
+                        <span class="year">2025</span>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Peluncuran Platform</h4>
+                        <p>Peluncuran aplikasi Trash2Cash dan implementasi sistem drop point</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="section" data-aos="fade-up">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card h-100" data-aos="zoom-in">
+                        <div class="stat-number" data-target="2500">0</div>
+                        <div class="stat-label">Kg Sampah Terkumpul</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card h-100" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="stat-number" data-target="100">0</div>
+                        <div class="stat-label">Drop Points</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card h-100" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="stat-number" data-target="1500">0</div>
+                        <div class="stat-label">Pengguna Aktif</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card h-100" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="stat-number" data-target="25">0</div>
+                        <div class="stat-label">Mitra Daur Ulang</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rumusan Masalah Section -->
+    <section class="section bg-light" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Rumusan Masalah</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h4 class="card-title mb-3 text-success"><i class="fas fa-question-circle me-2"></i>Permasalahan</h4>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent">Bagaimana meningkatkan kesadaran masyarakat dalam memilah dan mendaur ulang sampah secara efektif?</li>
+                                <li class="list-group-item bg-transparent">Bagaimana memanfaatkan teknologi digital untuk memberikan insentif kepada masyarakat?</li>
+                                <li class="list-group-item bg-transparent">Bagaimana menciptakan sistem drop point yang terintegrasi dan mudah diakses oleh masyarakat?</li>
+                                <li class="list-group-item bg-transparent">Bagaimana membangun kerja sama dengan mitra pengelola sampah?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h4 class="card-title mb-3 text-success"><i class="fas fa-lightbulb me-2"></i>Tantangan</h4>
+                            <p>Di Indonesia, sekitar 68,5 juta ton sampah dihasilkan setiap tahunnya, dengan sampah plastik menyumbang 17% dari total tersebut (KLHK, 2023). Tantangan utama terletak pada:</p>
+                            <ul>
+                                <li>Rendahnya kesadaran masyarakat tentang pemilahan sampah</li>
+                                <li>Kurangnya infrastruktur pendukung pengolahan sampah</li>
+                                <li>Keterbatasan akses ke fasilitas pengelolaan sampah</li>
+                                <li>Rendahnya motivasi masyarakat untuk berpartisipasi aktif</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="section" data-aos="fade-up">
+        <div class="container">
+            <h2 class="section-title">Dampak Program</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="img/impact-image.jpg" alt="Dampak Program" class="img-fluid rounded-3 shadow">
+                </div>
+                <div class="col-md-6">
+                    <div class="impact-list">
+                        <div class="impact-item">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <p>Mengurangi volume sampah yang terbuang ke TPA</p>
+                        </div>
+                        <div class="impact-item">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <p>Meningkatkan partisipasi masyarakat dalam pemilahan sampah</p>
+                        </div>
+                        <div class="impact-item">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <p>Memberikan peluang bisnis bagi mitra pengelola sampah</p>
+                        </div>
+                        <div class="impact-item">
+                            <i class="fas fa-check-circle text-success"></i>
+                            <p>Mendukung terciptanya ekonomi sirkular dalam pengelolaan sampah</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tujuan & Luaran Section -->
+    <section class="section bg-light" data-aos="fade-up">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-success mb-4"><i class="fas fa-bullseye me-2"></i>Tujuan Kegiatan</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent">Meningkatkan kesadaran masyarakat dalam memilah dan mendaur ulang sampah</li>
+                                <li class="list-group-item bg-transparent">Meningkatkan partisipasi masyarakat dalam memilah</li>
+                                <li class="list-group-item bg-transparent">Menciptakan sistem drop point yang mudah diakses oleh masyarakat</li>
+                                <li class="list-group-item bg-transparent">Mengidentifikasi dan menjalin kemitraan dengan bank sampah, perusahaan daur ulang, dan pihak terkait</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-success mb-4"><i class="fas fa-file-alt me-2"></i>Luaran</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent">Laporan kemajuan pengembangan aplikasi Trash2Cash</li>
+                                <li class="list-group-item bg-transparent">Laporan akhir implementasi dan evaluasi efektivitas sistem</li>
+                                <li class="list-group-item bg-transparent">Desain aplikasi dengan fitur utama: pendaftaran, drop point, QR code, dan penukaran poin</li>
+                                <li class="list-group-item bg-transparent">Akun media sosial sebagai platform edukasi dan promosi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-about">
+                        <img src="img/logo.png" alt="Trash2Cash" height="40" class="mb-3">
+                        <h5 class="text-white">Trash2Cash</h5>
+                        <p class="text-light">Platform digital untuk pengelolaan sampah berbasis insentif dengan sistem drop point terintegrasi</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-4">Tautan Cepat</h5>
+                    <ul class="footer-links">
+                        <li><a href="about.html">Tentang Kami</a></li>
+                        <li><a href="metodologi.html">Metodologi</a></li>
+                        <li><a href="team.html">Tim Kami</a></li>
+                        <li><a href="contact.html">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Kontak Kami</h5>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> Tasikmalaya</li>
+                        <li><i class="fas fa-phone"></i> +62 123 4567 890</li>
+                        <li><i class="fas fa-envelope"></i> info@trash2cash.com</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Media Sosial</h5>
+                    <div class="footer-social">
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4 border-light">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-light mb-0">© 2025 Trash2Cash. Hak Cipta Dilindungi.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light me-3">Kebijakan Privasi</a>
+                    <a href="#" class="text-light">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tambahkan Floating Action Button -->
+    <div class="floating-action-button">
+        <button class="btn btn-success rounded-circle" data-bs-toggle="modal" data-bs-target="#helpModal">
+            <i class="fas fa-question"></i>
+        </button>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Butuh Bantuan?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-2">
+                        <a href="https://wa.me/1234567890" class="btn btn-success">
+                            <i class="fab fa-whatsapp me-2"></i>Chat WhatsApp
+                        </a>
+                        <a href="tel:1234567890" class="btn btn-outline-success">
+                            <i class="fas fa-phone me-2"></i>Telepon
+                        </a>
+                        <a href="mailto:help@Trash2Cash.com" class="btn btn-outline-success">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"></h5>
+                        <i class="fas fa-user-circle me-2"></i>Masuk ke Trash2Cash
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Logo di tengah -->
+                    <div class="text-center mb-4">
+                        <img src="img/logo.png" alt="Trash2Cash" height="60">
+                    </div>
+                    
+                    <form id="loginForm" onsubmit="return handleLogin(event)">
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-user me-2"></i>Username
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" class="form-control" id="username" required 
+                                       placeholder="Masukkan username Anda">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" required
+                                       placeholder="Masukkan password Anda">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Checkbox Remember Me -->
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Ingat saya</label>
+                            <a href="#" class="float-end text-success">Lupa password?</a>
+                        </div>
+
+                        <div class="alert alert-danger d-none" id="loginError">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Username atau password salah!
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Masuk
+                        </button>
+
+                        <div class="text-center">
+                            <p class="mb-0">Belum punya akun? 
+                                <a href="register.html" class="text-success">Daftar sekarang</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-indicator"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inisialisasi AOS
+        AOS.init({
+            duration: 800,
+            offset: 100,
+            once: true
+        });
+
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            preloader.classList.add('fade-out');
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        });
+
+        // Scroll indicator
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.querySelector('.scroll-indicator').style.transform = `scaleX(${scrolled / 100})`;
+        });
+
+        // Tambahkan index untuk animasi mission list
+        document.querySelectorAll('.mission-list li').forEach((item, index) => {
+            item.style.setProperty('--item-index', index + 1);
+        });
+
+        // Animasi counting untuk statistik
+        const stats = document.querySelectorAll('.stat-number');
+        
+        stats.forEach(stat => {
+            const target = parseInt(stat.getAttribute('data-target'));
+            const increment = target / 100;
+            
+            function updateCount() {
+                const current = parseInt(stat.innerText);
+                if (current < target) {
+                    stat.innerText = Math.ceil(current + increment);
+                    setTimeout(updateCount, 10);
+                } else {
+                    stat.innerText = target;
+                }
+            }
+            
+            // Mulai animasi saat elemen terlihat
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCount();
+                    }
+                });
+            });
+            
+            observer.observe(stat);
+        });
+
+        // Tambahkan fungsi handleLogin
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+            
+            // Simulasi login sederhana
+            if (username === 'admin' && password === 'admin') {
+                window.location.href = '/dashboard-admin.html';
+                return false;
+            } else if (username === 'user' && password === 'user') {
+                window.location.href = '/dashboard-user.html';
+                return false;
+            } else {
+                errorElement.classList.remove('d-none');
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,850 @@
+/* Global Color Scheme for Trash2Cash */
+:root {
+    --cream-color: #F5F5DC;
+    --dark-gray: #444444;
+    --text-dark: #333333;
+    --light-gray: #777777;
+    --hover-dark: #333333;
+    --hover-cream: #E5E5CC;
+    --primary-green: #12372A;
+    --light-green: #e8f5e9;
+    --dark-green: #145f3c;
+    --accent-green: #28a745;
+}
+
+body {
+    background-color: var(--cream-color);
+    color: var(--text-dark);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+}
+
+/* Menambahkan style ke file css/style.css yang sudah ada */
+
+/* Section styling */
+.section {
+    padding: 5rem 0;
+}
+
+.section-title {
+    color: var(--primary-green);
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: var(--primary-green);
+    margin: 1rem auto;
+}
+
+/* Card styling */
+.feature-card {
+    padding: 2rem;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    background: white;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card .card-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--light-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+.custom-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+        padding: 3rem 0;
+        padding-top: 100px; /* Sesuaikan padding top untuk mobile */
+    }
+    
+    .feature-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .section {
+        padding: 3rem 0;
+    }
+
+    .timeline-item {
+        flex-direction: column;
+    }
+    
+    .timeline-number {
+        margin-bottom: 1rem;
+    }
+    
+    .hero-image-wrapper {
+        margin-top: 2rem;
+    }
+    
+    .hero-image-badge {
+        right: 0;
+        bottom: 1rem;
+    }
+}
+
+/* Progress bar styling */
+.progress-bar {
+    background-color: var(--primary-green);
+}
+
+/* Footer styling */
+/* .footer {
+    background-color: var(--dark-gray);
+    color: var(--cream-color);
+    padding: 1.5rem 0;
+    background: linear-gradient(to right, var(--dark-green), var(--primary-green));
+    padding-top: 4rem;
+    position: relative;
+} */
+
+.footer {
+    background-color: #333333;
+    color: #F5F5DC; /* Warna teks cream untuk kontras */
+}
+
+.footer a {
+    color: var(--cream-color);
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+    padding-left: 5px;
+}
+
+.footer-contact {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-contact li {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-social .btn-floating {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.footer-social .btn-floating:hover {
+    transform: translateY(-3px);
+    background: white;
+    color: var(--primary-green);
+}
+
+/* Hero section styling */
+.hero-section {
+    position: relative;
+    padding: 6rem 0;
+    background: linear-gradient(135deg, var(--light-green) 0%, #ffffff 100%);
+    margin-top: 2rem; /* Tambah margin atas */
+}
+
+.hero-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+    animation: gradientFlow 8s ease infinite;
+    pointer-events: none; /* Ini penting agar overlay tidak menghalangi klik */
+}
+
+.hero-section h1 {
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-image-wrapper {
+    position: relative;
+    padding: 1.5rem;
+}
+
+.hero-image-badge {
+    position: absolute;
+    bottom: 2rem;
+    right: -1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.hero-image-shape {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-green);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    top: -10px;
+    left: -10px;
+    z-index: -1;
+    opacity: 0.1;
+    animation: morphing 15s linear infinite;
+}
+
+.btn-pulse {
+    animation: pulse 2s infinite;
+}
+
+.btn-hover-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+@keyframes morphing {
+    0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+    50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+    75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+    100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+}
+
+/* Animasi tambahan */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--primary-green) }
+}
+
+/* About page specific styles */
+.hero-section-small {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, var(--light-green) 0%, #ffffff 100%);
+}
+
+.content-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    height: 100%;
+}
+
+.mission-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.mission-list li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.mission-list li:before {
+    content: '•';
+    color: var(--primary-green);
+    position: absolute;
+    left: 0;
+}
+
+.goal-card {
+    text-align: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    height: 100%;
+}
+
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    background: var(--light-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.icon-circle i {
+    font-size: 2rem;
+}
+
+.impact-list {
+    padding: 2rem;
+}
+
+.impact-item {
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.impact-item i {
+    margin-top: 0.25rem;
+}
+
+/* Timeline styling */
+.timeline {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.timeline-number {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-right: 2rem;
+}
+
+.timeline-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    flex-grow: 1;
+}
+
+.timeline-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1rem;
+}
+
+.timeline-list li {
+    padding-left: 1.5rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-list li:before {
+    content: '→';
+    color: var(--primary-green);
+    position: absolute;
+    left: 0;
+}
+
+.standard-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    text-align: center;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.standard-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Team page specific styles */
+.team-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+}
+
+.team-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.team-info {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.team-desc {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 1rem 0;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-links a {
+    font-size: 1.2rem;
+}
+
+.social-links a:hover {
+    opacity: 0.8;
+}
+
+/* Impact card styling */
+.impact-card {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    height: 100%;
+}
+
+/* Benefit card styling */
+.benefit-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    height: 100%;
+}
+
+.benefit-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--light-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.benefit-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.benefit-list li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.benefit-list li:before {
+    content: '✓';
+    color: var(--primary-green);
+    position: absolute;
+    left: 0;
+}
+
+/* Step card styling */
+.step-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    text-align: center;
+    height: 100%;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-green);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-weight: bold;
+}
+
+/* CTA section styling */
+.cta-section {
+    background: var(--light-green);
+}
+
+.cta-card {
+    background: white;
+    padding: 3rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Navbar modifications */
+.navbar {
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    padding: 0.5rem 0;
+    background: rgba(25, 135, 84, 0.95) !important;
+    backdrop-filter: blur(10px);
+}
+
+.navbar-brand img {
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled .navbar-brand img {
+    height: 35px;
+}
+
+/* Floating action button */
+.floating-action-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.floating-action-button .btn {
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.floating-action-button i {
+    font-size: 24px;
+}
+
+/* Animasi Navbar */
+.nav-item-animated .nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-item-animated .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.nav-item-animated .nav-link:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Hero Section Animation */
+.animated-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.animated-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+    animation: gradientFlow 8s ease infinite;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+/* Perbaikan Dropdown Navbar */
+.dropdown-menu.animated-dropdown {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    animation: dropdownFade 0.3s ease;
+}
+
+.dropdown-menu.animated-dropdown .dropdown-item {
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu.animated-dropdown .dropdown-item:hover {
+    background-color: var(--light-green);
+    color: var(--primary-green);
+    transform: translateX(5px);
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Perbaikan Navbar Dropdown */
+.nav-item.dropdown .nav-link {
+    display: flex;
+    align-items: center;
+}
+
+.nav-item.dropdown .nav-link::after {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-left: 0.3em solid transparent;
+}
+
+.nav-item.dropdown:hover .nav-link::after {
+    transform: rotate(180deg);
+}
+
+.nav-item.dropdown .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+}
+
+.nav-item.dropdown .nav-link:hover,
+.nav-item.dropdown .nav-link:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+}
+
+/* Perbaikan Navbar Dropdown */
+.nav-item.dropdown .nav-link::after {
+    content: none; /* Menghilangkan garis bawaan */
+}
+
+.nav-item.dropdown .dropdown-toggle::after {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-left: 0.3em solid transparent;
+}
+
+.nav-item.dropdown:hover .dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+/* Override animasi garis untuk dropdown */
+.nav-item.dropdown .nav-link::before {
+    display: none;
+}
+
+.nav-item.dropdown .nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-item.dropdown .nav-link:hover,
+.nav-item.dropdown .nav-link:focus,
+.nav-item.dropdown .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Button styling */
+.btn-success {
+    background-color: var(--dark-gray) !important;
+    border-color: var(--dark-gray) !important;
+    color: #ffffff !important;
+}
+
+.btn-success:hover, .btn-success:focus {
+    background-color: var(--hover-dark) !important;
+    border-color: var(--hover-dark) !important;
+}
+
+.btn-outline-success {
+    color: var(--dark-gray) !important;
+    border-color: var(--dark-gray) !important;
+}
+
+.btn-outline-success:hover {
+    background-color: var(--dark-gray) !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-secondary {
+    color: var(--dark-gray) !important;
+    border-color: var(--dark-gray) !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--dark-gray) !important;
+    color: var(--cream-color) !important;
+}
+
+/* Text colors */
+.text-success {
+    color: var(--dark-gray) !important;
+}
+
+.text-white-50 {
+    color: rgba(245, 245, 220, 0.5) !important;
+}
+
+/* Badge styling */
+.badge.bg-success {
+    background-color: var(--dark-gray) !important;
+}
+
+.badge.bg-white, .badge.bg-light {
+    background-color: var(--cream-color) !important;
+    color: var(--dark-gray) !important;
+}
+
+/* Navbar styling */
+.navbar-dark.bg-success {
+    background-color: var(--dark-gray) !important;
+}
+
+/* Sidebar styling */
+.sidebar {
+    background-color: var(--dark-gray) !important;
+}
+
+.sidebar .list-group-item {
+    color: var(--cream-color);
+}
+
+.sidebar .list-group-item.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-left: 3px solid var(--cream-color);
+}
+
+.sidebar .list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Card styling */
+.card {
+    background-color: #ffffff;
+}
+
+.card-header {
+    background-color: #ffffff;
+}
+
+/* Form controls */
+.form-control:focus, .form-select:focus {
+    border-color: var(--dark-gray);
+    box-shadow: 0 0 0 0.15rem rgba(68, 68, 68, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--dark-gray);
+    border-color: var(--dark-gray);
+}
+
+/* Footer styling */
+.footer {
+    background-color: var(--dark-gray);
+    color: var(--cream-color);
+    padding: 1.5rem 0;
+}
+
+.footer a {
+    color: var(--cream-color);
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+/* Chart colors adjustment */
+.chart-container .bg-success, 
+.chart-container .text-success,
+.chart-area .bg-success,
+.chart-area .text-success,
+.chart-pie .bg-success,
+.chart-pie .text-success {
+    background-color: var(--dark-gray) !important;
+    color: var(--cream-color) !important;
+}

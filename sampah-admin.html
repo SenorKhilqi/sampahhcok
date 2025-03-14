@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Trash2Cash</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --cream-color: #F5F5DC;
+            --dark-gray: #444444;
+            --text-dark: #333333;
+        }
+        
+        body {
+            background-color: var(--cream-color);
+            color: var(--text-dark);
+        }
+        
+        /* Animasi hover pada tabel */
+        .table tbody tr {
+            transition: all 0.2s ease-in-out;
+        }
+        .table tbody tr:hover {
+            background-color: rgba(68, 68, 68, 0.05) !important;
+            transform: scale(1.01);
+        }
+
+        /* Kartu statistik dengan gradien */
+        .stat-card {
+            border: none;
+            transition: transform 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card.success-gradient {
+            background: linear-gradient(45deg, var(--dark-gray), #555555);
+        }
+        .stat-card.info-gradient {
+            background: linear-gradient(45deg, #555555, #666666);
+        }
+        .stat-card.warning-gradient {
+            background: linear-gradient(45deg, #777777, #888888);
+        }
+        .stat-card.danger-gradient {
+            background: linear-gradient(45deg, #666666, #777777);
+        }
+
+        /* Filter card dengan bayangan lembut */
+        .filter-card {
+            border-radius: 15px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            background-color: #ffffff;
+        }
+        
+        /* Animasi loading untuk tabel */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .table-container {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Ikon statistik yang lebih besar */
+        .stat-icon {
+            font-size: 2.5rem;
+            opacity: 0.3;
+            position: absolute;
+            right: 1rem;
+            bottom: 1rem;
+        }
+
+        /* Badge status yang lebih menarik */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+        /* Style tambahan untuk menu Data Sampah berwarna merah */
+        .list-group-item.active.data-sampah-item {
+            background-color: var(--dark-gray) !important;
+            border-color: var(--dark-gray) !important;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background-color: var(--dark-gray);
+            position: fixed;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--cream-color);
+        }
+        
+        /* When sidebar is toggled/collapsed */
+        body.sidebar-collapsed .sidebar {
+            margin-left: -280px;
+        }
+        
+        body.sidebar-collapsed .content {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: -280px;
+            }
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            body.sidebar-mobile-open .sidebar {
+                margin-left: 0;
+            }
+        }
+
+        /* Fix for sidebar menu items */
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border: none;
+            border-radius: 0 !important;
+            color: var(--cream-color);
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .sidebar .list-group-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid var(--cream-color);
+            color: #fff;
+        }
+        
+        .sidebar .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .list-group-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 1rem 0;
+        }
+        
+        /* Button styling */
+        .btn-success {
+            background-color: var(--dark-gray);
+            border-color: var(--dark-gray);
+            color: #ffffff;
+        }
+
+        .btn-success:hover, .btn-success:focus {
+            background-color: #333333;
+            border-color: #333333;
+        }
+
+        .btn-outline-success {
+            color: var(--dark-gray);
+            border-color: var(--dark-gray);
+        }
+
+        .btn-outline-success:hover {
+            background-color: var(--dark-gray);
+            color: #ffffff;
+        }
+
+        .btn-outline-secondary {
+            color: var(--dark-gray);
+            border-color: var(--dark-gray);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--cream-color);
+        }
+
+        /* Badge styling */
+        .badge.bg-success {
+            background-color: var(--dark-gray) !important;
+        }
+        
+        .badge.bg-white, .badge.bg-light {
+            background-color: var(--cream-color) !important;
+        }
+        
+        .text-success {
+            color: var(--dark-gray) !important;
+        }
+        
+        /* Card styling */
+        .card {
+            background-color: #ffffff;
+        }
+        
+        .card-header {
+            background-color: #ffffff;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            background-color: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar yang diperbarui -->
+        <div class="sidebar text-white">
+            <div class="sidebar-header p-3 d-flex align-items-center gap-3">
+                <img src="img/logo.png" alt="Trash2Cash" height="35" class="rounded">
+            </div>
+            
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label ps-3 mb-2">
+                    <small class="text-white-50 text-uppercase">Menu Utama</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="dashboard-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <span class="badge rounded-pill bg-white text-success ms-auto">6</span>
+                    </a>
+                    <a href="users-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                        <span class="badge rounded-pill bg-light text-dark ms-auto">50</span>
+                    </a>
+                    <a href="sampah-admin.html" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-recycle"></i>
+                        <span>Data Sampah</span>
+                    </a>
+                </div>
+
+                <div class="menu-label ps-3 mb-2 mt-4">
+                    <small class="text-white-50 text-uppercase">Analisis</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="laporan-admin.html" class="list-group-item list-group-item-action" id="laporanLink">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        <span>Laporan</span>
+                    </a>
+                    <a href="pengaturan-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog me-2"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-footer p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User" class="rounded-circle me-2" width="32">
+                    <div class="user-info">
+                        <h6 class="mb-0">Admin User</h6>
+                        <small class="text-white-50">Super Admin</small>
+                    </div>
+                </div>
+                <a href="#help" class="btn btn-outline-light btn-sm w-100">
+                    <i class="fas fa-question-circle me-2"></i>Bantuan
+                </a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white">
+                <div class="container-fluid">
+                    <button class="btn btn-link" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger">3</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Laporan baru</a></li>
+                                <li><a class="dropdown-item" href="#">Pengajuan menunggu</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-shield me-2"></i>Admin
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="index.html">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid py-4">
+                <!-- Filter dan Pencarian -->
+                <div class="card filter-card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Rentang Tanggal</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Kategori Sampah</label>
+                                <select class="form-select">
+                                    <option value="">Semua Jenis</option>
+                                    <option>Plastik</option>
+                                    <option>Kertas/Kardus</option>
+                                    <option>Logam</option>
+                                    <option>Kaca</option>
+                                    <option>Elektronik</option>
+                                    <option>Organik</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-select">
+                                    <option value="">Semua Status</option>
+                                    <option>Diterima</option>
+                                    <option>Menunggu</option>
+                                    <option>Ditolak</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Cari</label>
+                                <input type="text" class="form-control" placeholder="Cari nama/ID...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ringkasan Statistik -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card success-gradient text-white h-100">
+                            <div class="card-body position-relative">
+                                <h6 class="text-uppercase fw-bold mb-3">Total Sampah Bulan Ini</h6>
+                                <h2 class="mb-3">75 Kg</h2>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-arrow-up me-2"></i>
+                                    <span>15% dari bulan lalu</span>
+                                </div>
+                                <i class="fas fa-recycle stat-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card info-gradient text-white h-100">
+                            <div class="card-body position-relative">
+                                <h6 class="text-uppercase fw-bold mb-3">Total Poin Diberikan</h6>
+                                <h2 class="mb-3">375</h2>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-arrow-up me-2"></i>
+                                    <span>Dari 30 transaksi</span>
+                                </div>
+                                <i class="fas fa-star stat-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card warning-gradient text-white h-100">
+                            <div class="card-body position-relative">
+                                <h6 class="text-uppercase fw-bold mb-3">Menunggu Verifikasi</h6>
+                                <h2 class="mb-3">8</h2>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-arrow-up me-2"></i>
+                                    <span>Perlu ditinjau</span>
+                                </div>
+                                <i class="fas fa-clock stat-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card danger-gradient text-white h-100">
+                            <div class="card-body position-relative">
+                                <h6 class="text-uppercase fw-bold mb-3">Ditolak</h6>
+                                <h2 class="mb-3">3</h2>
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-arrow-up me-2"></i>
+                                    <span>Bulan ini</span>
+                                </div>
+                                <i class="fas fa-ban stat-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kategori Sampah dan Poin -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-success">Kategori Sampah & Perhitungan Poin</h6>
+                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#kategoriModal">
+                            <i class="fas fa-plus me-2"></i>Tambah Kategori
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Kategori</th>
+                                        <th>Deskripsi</th>
+                                        <th>Poin/Kg</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Plastik</td>
+                                        <td>Botol PET, plastik kemasan, dll</td>
+                                        <td>5 poin/Kg</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kertas</td>
+                                        <td>Kertas bekas, kardus, koran</td>
+                                        <td>3 poin/Kg</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Logam</td>
+                                        <td>Kaleng, besi, aluminium</td>
+                                        <td>10 poin/Kg</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kaca</td>
+                                        <td>Botol kaca, gelas kaca</td>
+                                        <td>4 poin/Kg</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Organik</td>
+                                        <td>Sampah dapur, taman</td>
+                                        <td>2 poin/Kg</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Elektronik</td>
+                                        <td>Barang elektronik, baterai, kabel, dll</td>
+                                        <td>15 poin/Kg</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel Data -->
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-success">Data Setoran Sampah</h6>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-file-excel me-2"></i>Export Excel
+                            </button>
+                            <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addSampahModal">
+                                <i class="fas fa-plus me-2"></i>Tambah Data
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tanggal</th>
+                                        <th>Pengguna</th>
+                                        <th>Kategori</th>
+                                        <th>Jumlah (Kg)</th>
+                                        <th>Poin</th>
+                                        <th>Lokasi</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#SPH001</td>
+                                        <td>2025-01-15</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Budi+Santoso" 
+                                                     class="rounded-circle me-2" 
+                                                     width="32" height="32">
+                                                <span>Budi Santoso</span>
+                                            </div>
+                                        </td>
+                                        <td>Plastik</td>
+                                        <td>5</td>
+                                        <td>25</td>
+                                        <td>Tasikmalaya</td>
+                                        <td><span class="status-badge bg-success text-white">Diterima</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-info" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SPH002</td>
+                                        <td>2025-01-14</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Ani+Wijaya" 
+                                                     class="rounded-circle me-2" 
+                                                     width="32" height="32">
+                                                <span>Ani Wijaya</span>
+                                            </div>
+                                        </td>
+                                        <td>Kertas</td>
+                                        <td>3</td>
+                                        <td>15</td>
+                                        <td>Jakarta</td>
+                                        <td><span class="status-badge bg-warning text-dark">Menunggu</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-info" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#SPH003</td>
+                                        <td>2025-01-13</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Siti+Rahayu" 
+                                                     class="rounded-circle me-2" 
+                                                     width="32" height="32">
+                                                <span>Siti Rahayu</span>
+                                            </div>
+                                        </td>
+                                        <td>Logam</td>
+                                        <td>2</td>
+                                        <td>20</td>
+                                        <td>Bandung</td>
+                                        <td><span class="status-badge bg-success text-white">Diterima</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-info" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-end"> </ul>
+                                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Modal Tambah/Edit Data Sampah -->
+    <div class="modal fade" id="addSampahModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Data Sampah</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">ID Transaksi</label>
+                            <input type="text" class="form-control" readonly value="#SPH004">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nama Pengguna</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kategori Sampah</label>
+                            <select class="form-select">
+                                <option>Plastik</option>
+                                <option>Kertas/Kardus</option>
+                                <option>Logam</option>
+                                <option>Kaca</option>
+                                <option>Elektronik</option>
+                                <option>Organik</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Jumlah (Kg)</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Poin</label>
+                            <input type="number" class="form-control">
+                            <small class="text-muted">Dihitung otomatis berdasarkan kategori dan jumlah</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Lokasi</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option>Menunggu</option>
+                                <option>Diterima</option>
+                                <option>Ditolak</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah/Edit Kategori -->
+    <div class="modal fade" id="kategoriModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Kategori Sampah</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Nama Kategori</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Deskripsi</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Poin per Kg</label>
+                            <input type="number" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option>Aktif</option>
+                                <option>Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/dashboard.js"></script>
+    <script src="/js/footer-loader.js"></script>
+    
+    <!-- Script untuk mengubah warna latar Laporan saat diklik -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const laporanLink = document.getElementById('laporanLink');
+            
+            laporanLink.addEventListener('click', function(e) {
+                // Simpan URL tujuan
+                const targetUrl = this.href;
+                
+                // Hentikan navigasi default
+                e.preventDefault();
+                
+                // Ubah warna latar belakang menjadi #35ad02
+                this.style.backgroundColor = '#35ad02';
+                this.style.color = 'white';
+                
+                // Tambahkan efek transisi
+                this.style.transition = 'background-color 0.3s ease';
+                
+                // Arahkan ke halaman setelah penundaan singkat
+                setTimeout(function() {
+                    window.location.href = targetUrl;
+                }, 300);
+            });
+            
+            // Periksa apakah halaman saat ini adalah laporan-admin.html
+            if (window.location.href.includes('laporan-admin.html')) {
+                laporanLink.style.backgroundColor = '#35ad02';
+                laporanLink.style.color = 'white';
+            }
+        });
+    </script>
+    
+    <!-- Script untuk mengubah warna Data Sampah -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pastikan link Data Sampah berwarna merah
+            const dataSampahLink = document.querySelector('.data-sampah-item');
+            if (dataSampahLink) {
+                dataSampahLink.style.backgroundColor = 'red';
+                dataSampahLink.style.borderColor = 'red';
+            }
+        });
+
+        // Script to handle sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    
+                    // For mobile
+                    if (window.innerWidth < 992) {
+                        document.body.classList.toggle('sidebar-mobile-open');
+                    }
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992 && 
+                    !event.target.closest('.sidebar') && 
+                    !event.target.closest('#sidebarToggle') && 
+                    document.body.classList.contains('sidebar-mobile-open')) {
+                    document.body.classList.remove('sidebar-mobile-open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

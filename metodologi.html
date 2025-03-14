@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologi Trash2Cash - Pengelolaan Sampah Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- ...existing head content... -->
+    <style>
+        :root {
+            --primary-color: #444444;
+            --secondary-color: #F5F5DC;
+            --text-dark: #333333;
+            --text-light: #F5F5DC;
+            --hover-dark: #333333;
+            --hover-light: #e5e5cc;
+        }
+        
+        /* Perbaikan spacing hero section */
+        .hero-section-small {
+            padding: 120px 0 80px;
+            background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('img/pattern.png');
+            background-size: cover;
+            background-color: var(--secondary-color);
+        }
+
+        /* Perbaikan timeline */
+        .timeline-item {
+            transition: all 0.3s ease;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background: var(--secondary-color);
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .timeline-number {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover .timeline-number {
+            transform: scale(1.1);
+        }
+
+        /* Perbaikan standard cards */
+        .standard-card {
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: var(--secondary-color);
+            height: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .standard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(68, 68, 68, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .standard-card:hover .icon-circle {
+            background: rgba(68, 68, 68, 0.2);
+            transform: scale(1.1);
+        }
+
+        .icon-circle i {
+            font-size: 1.5rem;
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-section-small {
+                padding: 100px 0 60px;
+            }
+            
+            .timeline-item {
+                padding: 20px;
+            }
+            
+            .standard-card {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Animasi scroll untuk timeline */
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Progress bar di atas timeline */
+        .progress-tracker {
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+            background: var(--secondary-color);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .progress-step {
+            width: 20%;
+            text-align: center;
+            position: relative;
+            float: left;
+        }
+
+        .progress-step.active .step-number {
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            margin: 0 auto 5px;
+            line-height: 30px;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect untuk cards */
+        .standard-card {
+            cursor: pointer;
+        }
+
+        .standard-card .details {
+            height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .standard-card:hover .details {
+            height: 100px;
+            margin-top: 15px;
+        }
+
+        /* Center align navbar items in mobile view */
+        @media (max-width: 991.98px) {
+            .navbar-collapse .navbar-nav {
+                text-align: center;
+            }
+            
+            .navbar-collapse .dropdown-menu {
+                text-align: center;
+                border: none;
+                background-color: white; /* Set background color to white */
+            }
+
+            .navbar-collapse .nav-item.dropdown .dropdown-toggle {
+                text-align: center;
+                display: block;
+                width: 100%;
+            }
+            
+            .navbar-collapse .dropdown-menu .dropdown-item {
+                text-align: center;
+                padding-left: 0;
+                padding-right: 0;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .navbar-collapse .dropdown-item i {
+                display: inline-block;
+                margin-right: 0.5rem;
+            }
+        }
+
+        /* Override Bootstrap classes */
+        .bg-success {
+            background-color: var(--primary-color) !important;
+        }
+        
+        .text-success {
+            color: var(--primary-color) !important;
+        }
+        
+        .btn-success {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        .btn-success:hover {
+            background-color: var(--hover-dark);
+            border-color: var(--hover-dark);
+        }
+        
+        .btn-outline-success {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline-success:hover {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        .bg-light {
+            background-color: var(--secondary-color) !important;
+        }
+        
+        body {
+            color: var(--text-dark);
+            background-color: var(--secondary-color);
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+        
+        .accordion-button:not(.collapsed) {
+            background-color: rgba(68, 68, 68, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .accordion-button:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(68, 68, 68, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="img/logo.png" alt="Trash2Cash" height="40" class="me-2">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> Beranda</a>
+                    </li>
+                    <li class="nav-item dropdown nav-item-animated">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-info-circle me-1"></i> Informasi
+                        </a>
+                        <ul class="dropdown-menu animated-dropdown">
+                            <li><a class="dropdown-item" href="about.html"><i class="fas fa-building me-2"></i>Tentang Kami</a></li>
+                            <li><a class="dropdown-item" href="metodologi.html"><i class="fas fa-clipboard-list me-2"></i>Metodologi</a></li>
+                            <li><a class="dropdown-item" href="team.html"><i class="fas fa-users me-2"></i>Tim Kami</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link" href="contact.html"><i class="fas fa-phone me-1"></i> Kontak</a>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link btn" href="register.html">
+                            <i class="fas fa-user-plus me-1"></i> Daftar
+                        </a>
+                    </li>
+                    <li class="nav-item nav-item-animated">
+                        <a class="nav-link btn" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <i class="fas fa-sign-in-alt me-1"></i> Masuk
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Methodology Hero Section -->
+    <div class="hero-section-small position-relative" style="background: linear-gradient(135deg, #E6D5B8 0%, #5E5E5E 100%); color: #F5F5DC;"">
+        <div class="container">
+            <div class="row">
+                <div class="row justify-content-center text-center">
+                    <h1 class="display-4 fw-bold mb-3">Metodologi</h1>
+                    <p class="lead">Sistem dan proses pengelolaan sampah berbasis digital dengan insentif untuk mendorong partisipasi masyarakat</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tambahkan Progress Tracker setelah hero section -->
+    <div class="progress-tracker">
+        <div class="container">
+            <div class="row">
+                <div class="progress-step active">
+                    <div class="step-number">1</div>
+                    <small>Pemilahan</small>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">2</div>
+                    <small>Drop Point</small>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <small>QR Code</small>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">4</div>
+                    <small>Penukaran</small>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">5</div>
+                    <small>Daur Ulang</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Flow Section -->
+    <section class="section">
+        <div class="container">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3>Pemilahan Sampah</h3>
+                        <p>Pengguna memilah sampah berdasarkan kategori:</p>
+                        <ul class="timeline-list">
+                            <li>Sampah plastik (botol, kemasan, dll)</li>
+                            <li>Sampah kertas dan kardus</li>
+                            <li>Sampah logam dan kaleng</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3>Pencarian Drop Point</h3>
+                        <p>Proses menemukan lokasi penyetoran sampah:</p>
+                        <ul class="timeline-list">
+                            <li>Menggunakan fitur peta di aplikasi</li>
+                            <li>Melihat detail lokasi dan jam operasional</li>
+                            <li>Mendapatkan petunjuk arah ke drop point terdekat</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3>Pemindaian QR Code</h3>
+                        <p>Proses penyetoran sampah di drop point:</p>
+                        <ul class="timeline-list">
+                            <li>Memindai QR code di lokasi drop point</li>
+                            <li>Verifikasi jenis dan berat sampah</li>
+                            <li>Konfirmasi penyetoran</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3>Pemberian Insentif</h3>
+                        <p>Mekanisme pemberian poin atau reward:</p>
+                        <ul class="timeline-list">
+                            <li>Perhitungan poin berdasarkan jenis dan berat sampah</li>
+                            <li>Poin dikirimkan ke akun pengguna</li>
+                            <li>Notifikasi perolehan poin</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">5</div>
+                    <div class="timeline-content">
+                        <h3>Pengelolaan Sampah oleh Mitra</h3>
+                        <p>Sampah yang terkumpul kemudian dikelola:</p>
+                        <ul class="timeline-list">
+                            <li>Pengumpulan dan sortir lanjutan</li>
+                            <li>Proses daur ulang sesuai jenis sampah</li>
+                            <li>Pembuatan produk daur ulang</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quality Standards Section -->
+    <section class="section bg-light">
+        <div class="container">
+            <h2 class="section-title">Standar Pengelolaan</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="standard-card">
+                        <div class="icon-circle mb-4">
+                            <i class="fas fa-mobile-alt text-success"></i>
+                        </div>
+                        <h4>Sistem Digital</h4>
+                        <p>Menggunakan teknologi untuk memudahkan pemilahan dan penukaran sampah</p>
+                        <div class="details">
+                            <p>Platform berbasis mobile dan web yang terintegrasi dengan sistem drop point.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="standard-card">
+                        <div class="icon-circle mb-4">
+                            <i class="fas fa-recycle text-success"></i>
+                        </div>
+                        <h4>Proses Daur Ulang</h4>
+                        <p>Bekerja sama dengan mitra yang memiliki standar pengelolaan sampah berkelanjutan</p>
+                        <div class="details">
+                            <p>Menjamin sampah diproses dengan metode ramah lingkungan dan efisien.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="standard-card">
+                        <div class="icon-circle mb-4">
+                            <i class="fas fa-chart-line text-success"></i>
+                        </div>
+                        <h4>Transparansi Data</h4>
+                        <p>Pelacakan dan pelaporan jumlah sampah yang dikelola dan poin yang diberikan</p>
+                        <div class="details">
+                            <p>Laporan berkala tentang dampak lingkungan dan ekonomi dari program.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sistem Insentif Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title mb-5">Sistem Insentif</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-4">
+                    <img src="img/rewards.jpg" alt="Sistem Insentif" class="img-fluid rounded-3 shadow-lg">
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <h3 class="card-title text-success mb-4">Mekanisme Penghargaan</h3>
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="me-3">
+                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-coins"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5>Perolehan Poin</h5>
+                                    <p>Setiap jenis sampah memiliki nilai poin berbeda berdasarkan berat dan kategori</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="me-3">
+                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5>Penukaran Reward</h5>
+                                    <p>Poin dapat ditukar dengan uang elektronik, voucher belanja, atau donasi</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5>Program Loyalitas</h5>
+                                    <p>Pengguna aktif mendapatkan status dan keuntungan tambahan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tambahkan FAQ Section sebelum footer -->
+    <section class="section bg-light">
+        <div class="container">
+            <h2 class="section-title mb-5">Pertanyaan Umum</h2>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Bagaimana cara menemukan drop point terdekat?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Anda dapat menggunakan fitur peta pada aplikasi Trash2Cash untuk menemukan lokasi drop point terdekat dari lokasi Anda.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Apa saja jenis sampah yang dapat ditukarkan dengan poin?
+                        </button>
+                    </h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Jenis sampah yang dapat ditukarkan meliputi sampah plastik (botol, kemasan), sampah kertas dan kardus, serta sampah logam dan kaleng.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Bagaimana cara menukarkan poin yang sudah dikumpulkan?
+                        </button>
+                    </h3>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Poin dapat ditukarkan melalui menu "Tukar Poin" di aplikasi. Anda dapat memilih berbagai opsi penukaran seperti uang elektronik, voucher belanja, atau donasi.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-about">
+                        <img src="img/logo.png" alt="Trash2Cash" height="40" class="mb-3">
+                        <h5 class="text-white">Trash2Cash</h5>
+                        <p class="text-light">Platform digital untuk pengelolaan sampah berbasis insentif dengan sistem drop point terintegrasi</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white mb-4">Tautan Cepat</h5>
+                    <ul class="footer-links">
+                        <li><a href="about.html">Tentang Kami</a></li>
+                        <li><a href="metodologi.html">Metodologi</a></li>
+                        <li><a href="team.html">Tim Kami</a></li>
+                        <li><a href="contact.html">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Kontak Kami</h5>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> Tasikmalaya</li>
+                        <li><i class="fas fa-phone"></i> +62 123 4567 890</li>
+                        <li><i class="fas fa-envelope"></i> info@trash2cash.com</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Media Sosial</h5>
+                    <div class="footer-social">
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4 border-light">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-light mb-0">© 2025 Trash2Cash. Hak Cipta Dilindungi.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light me-3">Kebijakan Privasi</a>
+                    <a href="#" class="text-light">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tambahkan Floating Action Button -->
+    <div class="floating-action-button">
+        <button class="btn btn-success rounded-circle" data-bs-toggle="modal" data-bs-target="#helpModal">
+            <i class="fas fa-question"></i>
+        </button>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Butuh Bantuan?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-2">
+                        <a href="https://wa.me/1234567890" class="btn btn-success">
+                            <i class="fab fa-whatsapp me-2"></i>Chat WhatsApp
+                        </a>
+                        <a href="tel:1234567890" class="btn btn-outline-success">
+                            <i class="fas fa-phone me-2"></i>Telepon
+                        </a>
+                        <a href="mailto:help@Trash2Cash.com" class="btn btn-outline-success">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ <!-- Login Modal -->
+ <div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"></h5>
+                    <i class="fas fa-user-circle me-2"></i>Masuk ke Trash2Cash
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- Logo di tengah -->
+                <div class="text-center mb-4">
+                    <img src="img/logo.png" alt="Trash2Cash" height="60">
+                </div>
+                
+                <form id="loginForm" onsubmit="return handleLogin(event)">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-user me-2"></i>Username
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" class="form-control" id="username" required 
+                                   placeholder="Masukkan username Anda">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" class="form-control" id="password" required
+                                   placeholder="Masukkan password Anda">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Checkbox Remember Me -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Ingat saya</label>
+                        <a href="#" class="float-end text-success">Lupa password?</a>
+                    </div>
+
+                    <div class="alert alert-danger d-none" id="loginError">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Username atau password salah!
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>Masuk
+                    </button>
+
+                    <div class="text-center">
+                        <p class="mb-0">Belum punya akun? 
+                            <a href="register.html" class="text-success">Daftar sekarang</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="scroll-indicator"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animasi scroll untuk timeline
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.timeline-item').forEach((item) => {
+            observer.observe(item);
+        });
+
+        // Update progress tracker
+        window.addEventListener('scroll', () => {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const progressSteps = document.querySelectorAll('.progress-step');
+            
+            timelineItems.forEach((item, index) => {
+                const rect = item.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    progressSteps.forEach((step, i) => {
+                        if (i <= index) {
+                            step.classList.add('active');
+                        } else {
+                            step.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Tambahkan fungsi handleLogin
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+            
+            // Simulasi login sederhana
+            if (username === 'admin' && password === 'admin') {
+                window.location.href = '/dashboard-admin.html';
+                return false;
+            } else if (username === 'user' && password === 'user') {
+                window.location.href = '/dashboard-user.html';
+                return false;
+            } else {
+                errorElement.classList.remove('d-none');
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
+

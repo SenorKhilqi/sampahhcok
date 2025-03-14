@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Trash2Cash</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Dashboard-specific styles */
+        :root {
+            --cream-color: #F5F5DC;
+            --dark-gray: #444444;
+            --text-dark: #333333;
+        }
+        
+        body {
+            background-color: var(--cream-color);
+            color: var(--text-dark);
+        }
+        
+        .summary-card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            background-color: #ffffff;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .summary-card .card-body {
+            padding: 1.25rem;
+        }
+        
+        .icon-circle {
+            height: 3rem;
+            width: 3rem;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .chart-area {
+            height: 350px;
+            position: relative;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background-color: var(--dark-gray);
+            position: fixed;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--cream-color);
+        }
+        
+        /* When sidebar is toggled/collapsed */
+        body.sidebar-collapsed .sidebar {
+            margin-left: -280px;
+        }
+        
+        body.sidebar-collapsed .content {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: -280px;
+            }
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            body.sidebar-mobile-open .sidebar {
+                margin-left: 0;
+            }
+        }
+
+        /* Fix for sidebar menu items */
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border: none;
+            border-radius: 0 !important;
+            color: var(--cream-color);
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .sidebar .list-group-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid var(--cream-color);
+            color: #fff;
+        }
+
+        .sidebar .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .list-group-item i {
+            margin-right: 10px; 
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 1rem 0;
+        }
+
+        /* Button styling */
+        .btn-success {
+            background-color: var(--dark-gray);
+            border-color: var(--dark-gray);
+            color: #ffffff;
+        }
+
+        .btn-success:hover, .btn-success:focus {
+            background-color: #333333;
+            border-color: #333333;
+        }
+
+        .btn-outline-secondary {
+            color: var(--dark-gray);
+            border-color: var(--dark-gray);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--cream-color);
+        }
+
+        /* Topbar styling */
+        .navbar {
+            background-color: #ffffff !important;
+        }
+
+        /* Card headers */
+        .card-header {
+            background-color: #ffffff;
+        }
+
+        .font-weight-bold.text-success {
+            color: var(--dark-gray) !important;
+        }
+
+        /* Charts color adjustments */
+        .text-success {
+            color: var(--dark-gray) !important;
+        }
+
+        .bg-success {
+            background-color: var(--dark-gray) !important;
+        }
+
+        .text-primary {
+            color: #555555 !important;
+        }
+
+        /* Badge styling */
+        .badge.bg-success {
+            background-color: var(--dark-gray) !important;
+        }
+        
+        .badge.bg-white {
+            background-color: var(--cream-color) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar yang diperbarui -->
+        <div class="sidebar text-white">
+            <div class="sidebar-header p-3 d-flex align-items-center gap-3">
+                <img src="img/logo.png" alt="Trash2Cash" height="35" class="rounded">
+                <!-- Removed h4 element with "Trash2Cash" text -->
+            </div>
+            
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label ps-3 mb-2">
+                    <small class="text-white-50 text-uppercase">Menu Utama</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="dashboard-admin.html" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <span class="badge rounded-pill bg-white text-success ms-auto">6</span>
+                    </a>
+                    <a href="users-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                        <span class="badge rounded-pill bg-light text-dark ms-auto">50</span>
+                    </a>
+                    <a href="sampah-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-recycle"></i>
+                        <span>Data Sampah</span>
+                    </a>
+                </div>
+
+                <div class="menu-label ps-3 mb-2 mt-4">
+                    <small class="text-white-50 text-uppercase">Analisis</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="laporan-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Laporan</span>
+                    </a>
+                    <a href="pengaturan-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-footer p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User" class="rounded-circle me-2" width="32">
+                    <div class="user-info">
+                        <h6 class="mb-0">Admin User</h6>
+                        <small class="text-white-50">Super Admin</small>
+                    </div>
+                </div>
+                <a href="#help" class="btn btn-outline-light btn-sm w-100">
+                    <i class="fas fa-question-circle me-2"></i>Bantuan
+                </a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white">
+                <div class="container-fluid">
+                    <button class="btn btn-link" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger">3</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Pemberitahuan baru</a></li>
+                                <li><a class="dropdown-item" href="#">Updates tersedia</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-shield me-2"></i>Admin
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="index.html">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid py-4">
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+                        <i class="fas fa-download fa-sm text-white-50 me-2"></i>Generate Report
+                    </a>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="row">
+                    <!-- Total Sampah -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card summary-card border-left-primary shadow h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Sampah</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">250 Kg</div>
+                                        <div class="mt-2 small text-success"><i class="fas fa-arrow-up me-1"></i>15% from last month</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon-circle bg-success bg-opacity-10 text-success">
+                                            <i class="fas fa-recycle"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Users -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card summary-card border-left-success shadow h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Pengguna</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">50</div>
+                                        <div class="mt-2 small text-primary"><i class="fas fa-user-plus me-1"></i>8 new this month</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon-circle bg-primary bg-opacity-10 text-primary">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Points -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card summary-card border-left-info shadow h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Poin</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">1,250</div>
+                                        <div class="mt-2 small text-info"><i class="fas fa-exchange-alt me-1"></i>From 75 transactions</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon-circle bg-info bg-opacity-10 text-info">
+                                            <i class="fas fa-coins"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Drop Points -->
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card summary-card border-left-warning shadow h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Drop Points</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">15</div>
+                                        <div class="mt-2 small text-warning"><i class="fas fa-map-marker-alt me-1"></i>Across 5 cities</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon-circle bg-warning bg-opacity-10 text-warning">
+                                            <i class="fas fa-map-marked-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="row">
+                    <!-- Area Chart -->
+                    <div class="col-xl-8 col-lg-7">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-success">Pengumpulan Sampah (Bulanan)</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end shadow animated--fade-in">
+                                        <a class="dropdown-item" href="#">Export as Image</a>
+                                        <a class="dropdown-item" href="#">Export Data</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="myAreaChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pie Chart -->
+                    <div class="col-xl-4 col-lg-5">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-success">Distribusi Jenis Sampah</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end shadow animated--fade-in">
+                                        <a class="dropdown-item" href="#">Export as Image</a>
+                                        <a class="dropdown-item" href="#">Export Data</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-pie pt-4 pb-2">
+                                    <canvas id="myPieChart"></canvas>
+                                </div>
+                                <div class="mt-4 text-center small">
+                                    <span class="me-2">
+                                        <i class="fas fa-circle text-success"></i> Plastik
+                                    </span>
+                                    <span class="me-2">
+                                        <i class="fas fa-circle text-primary"></i> Kertas
+                                    </span>
+                                    <span class="me-2">
+                                        <i class="fas fa-circle text-warning"></i> Logam
+                                    </span>
+                                    <span class="me-2">
+                                        <i class="fas fa-circle text-info"></i> Kaca
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Section -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-success">Aktivitas Terbaru</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Pengguna</th>
+                                        <th>Aktivitas</th>
+                                        <th>Jenis Sampah</th>
+                                        <th>Jumlah (Kg)</th>
+                                        <th>Poin</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2025-01-15</td>
+                                        <td>Budi Santoso</td>
+                                        <td>Penyetoran Sampah</td>
+                                        <td>Plastik</td>
+                                        <td>5 Kg</td>
+                                        <td>25</td>
+                                        <td><span class="badge bg-success">Selesai</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-01-14</td>
+                                        <td>Ani Wijaya</td>
+                                        <td>Penukaran Poin</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>50</td>
+                                        <td><span class="badge bg-success">Selesai</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-01-14</td>
+                                        <td>Siti Rahayu</td>
+                                        <td>Penyetoran Sampah</td>
+                                        <td>Kertas</td>
+                                        <td>3 Kg</td>
+                                        <td>15</td>
+                                        <td><span class="badge bg-success">Selesai</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-01-13</td>
+                                        <td>Joko Susanto</td>
+                                        <td>Penyetoran Sampah</td>
+                                        <td>Logam</td>
+                                        <td>2 Kg</td>
+                                        <td>20</td>
+                                        <td><span class="badge bg-warning text-dark">Menunggu</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2025-01-12</td>
+                                        <td>Dewi Lestari</td>
+                                        <td>Penyetoran Sampah</td>
+                                        <td>Kaca</td>
+                                        <td>4 Kg</td>
+                                        <td>16</td>
+                                        <td><span class="badge bg-success">Selesai</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/dashboard.js"></script>
+    <script src="/js/footer-loader.js"></script>
+    
+    <script>
+        // Set up the style for dashboard item
+        document.addEventListener('DOMContentLoaded', function() {
+            const dashboardItem = document.querySelector('.dashboard-item');
+            if (dashboardItem) {
+                dashboardItem.style.backgroundColor = '#35ad02';
+                dashboardItem.style.borderColor = '#35ad02';
+            }
+            
+            // Chart.js implementation
+            const ctx1 = document.getElementById('myAreaChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Sampah Terkumpul (Kg)',
+                        data: [50, 60, 55, 80, 65, 90, 75, 70, 85, 95, 100, 110],
+                        backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                        borderColor: 'rgba(25, 135, 84, 1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                maxTicksLimit: 5
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const ctx2 = document.getElementById('myPieChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['Plastik', 'Kertas', 'Logam', 'Kaca', 'Organik'],
+                    datasets: [{
+                        data: [40, 25, 15, 10, 10],
+                        backgroundColor: [
+                            'rgba(25, 135, 84, 1)', // Success
+                            'rgba(13, 110, 253, 1)', // Primary
+                            'rgba(255, 193, 7, 1)', // Warning
+                            'rgba(13, 202, 240, 1)', // Info
+                            'rgba(173, 181, 189, 1)' // Secondary
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+
+        // Script to handle sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    
+                    // For mobile
+                    if (window.innerWidth < 992) {
+                        document.body.classList.toggle('sidebar-mobile-open');
+                    }
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992 && 
+                    !event.target.closest('.sidebar') && 
+                    !event.target.closest('#sidebarToggle') && 
+                    document.body.classList.contains('sidebar-mobile-open')) {
+                    document.body.classList.remove('sidebar-mobile-open');
+                }
+            });
+            
+            // Additional chart.js code can remain here
+            // ...existing chart.js code...
+        });
+    </script>
+</body>
+</html>

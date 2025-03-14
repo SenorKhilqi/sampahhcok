@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Trash2Cash</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --cream-color: #F5F5DC;
+            --dark-gray: #444444;
+            --text-dark: #333333;
+        }
+        
+        body {
+            background-color: var(--cream-color);
+            color: var(--text-dark);
+        }
+        
+        /* Animasi hover pada tabel */
+        .table tbody tr {
+            transition: all 0.2s ease-in-out;
+        }
+        .table tbody tr:hover {
+            background-color: rgba(68, 68, 68, 0.05) !important;
+            transform: scale(1.01);
+        }
+
+        /* Kartu statistik dengan gradien */
+        .stat-card {
+            border: none;
+            transition: transform 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card.success-gradient {
+            background: linear-gradient(45deg, var(--dark-gray), #555555);
+        }
+        .stat-card.info-gradient {
+            background: linear-gradient(45deg, #555555, #666666);
+        }
+        .stat-card.warning-gradient {
+            background: linear-gradient(45deg, #777777, #888888);
+        }
+        .stat-card.danger-gradient {
+            background: linear-gradient(45deg, #666666, #777777);
+        }
+
+        /* Badge status yang lebih menarik */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        
+        /* Style untuk menu Pengguna berwarna dark gray */
+        .list-group-item.active.users-item {
+            background-color: var(--dark-gray) !important;
+            border-color: var(--dark-gray) !important;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 280px;
+            min-height: 100vh;
+            background-color: var(--dark-gray);
+            position: fixed;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        
+        .content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            min-height: 100vh;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--cream-color);
+        }
+        
+        /* When sidebar is toggled/collapsed */
+        body.sidebar-collapsed .sidebar {
+            margin-left: -280px;
+        }
+        
+        body.sidebar-collapsed .content {
+            margin-left: 0;
+            width: 100%;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: -280px;
+            }
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            body.sidebar-mobile-open .sidebar {
+                margin-left: 0;
+            }
+        }
+
+        /* Fix for sidebar menu items */
+        .sidebar .list-group-item {
+            background-color: transparent;
+            border: none;
+            border-radius: 0 !important;
+            color: var(--cream-color);
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .sidebar .list-group-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid var(--cream-color);
+            color: #fff;
+        }
+        
+        .sidebar .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .list-group-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 1rem 0;
+        }
+        
+        /* Card styling */
+        .card {
+            background-color: #ffffff;
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        /* Button styling */
+        .btn-success {
+            background-color: var(--dark-gray);
+            border-color: var(--dark-gray);
+            color: #ffffff;
+        }
+
+        .btn-success:hover, .btn-success:focus {
+            background-color: #333333;
+            border-color: #333333;
+        }
+
+        .btn-outline-success {
+            color: var(--dark-gray);
+            border-color: var(--dark-gray);
+        }
+
+        .btn-outline-success:hover {
+            background-color: var(--dark-gray);
+            color: #ffffff;
+        }
+
+        .btn-outline-secondary {
+            color: var(--dark-gray);
+            border-color: var(--dark-gray);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--cream-color);
+        }
+        
+        /* Text colors */
+        .text-success {
+            color: var(--dark-gray) !important;
+        }
+        
+        .text-white-50 {
+            color: rgba(245, 245, 220, 0.5) !important;
+        }
+        
+        /* Badge styling */
+        .badge.bg-success {
+            background-color: var(--dark-gray) !important;
+        }
+        
+        .badge.bg-white, .badge.bg-light {
+            background-color: var(--cream-color) !important;
+            color: var(--dark-gray) !important;
+        }
+        
+        /* Card gradient colors */
+        .bg-gradient-primary {
+            background: linear-gradient(45deg, var(--dark-gray), #555555) !important;
+            color: var(--cream-color) !important;
+        }
+        
+        .bg-gradient-success {
+            background: linear-gradient(45deg, #555555, #666666) !important;
+            color: var(--cream-color) !important;
+        }
+        
+        .bg-gradient-warning {
+            background: linear-gradient(45deg, #666666, #777777) !important;
+            color: var(--cream-color) !important;
+        }
+        
+        .bg-gradient-info {
+            background: linear-gradient(45deg, #777777, #888888) !important;
+            color: var(--cream-color) !important;
+        }
+        
+        /* Fix for card text colors */
+        .card .text-dark, 
+        .card .text-xs,
+        .card .h3,
+        .card .small,
+        .card .text-dark-50 {
+            color: var(--cream-color) !important;
+        }
+        
+        /* Modal styling */
+        .modal-content {
+            background-color: #ffffff;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            background-color: #ffffff !important;
+        }
+        
+        /* Form elements */
+        .form-control:focus, 
+        .form-select:focus {
+            border-color: var(--dark-gray);
+            box-shadow: 0 0 0 0.15rem rgba(68, 68, 68, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar yang diperbarui -->
+        <div class="sidebar text-white">
+            <div class="sidebar-header p-3 d-flex align-items-center gap-3">
+                <img src="img/logo.png" alt="Trash2Cash" height="35" class="rounded">
+            </div>
+            
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-menu">
+                <div class="menu-label ps-3 mb-2">
+                    <small class="text-white-50 text-uppercase">Menu Utama</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="dashboard-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <span class="badge rounded-pill bg-white text-success ms-auto">6</span>
+                    </a>
+                    <a href="users-admin.html" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                        <span class="badge rounded-pill bg-light text-dark ms-auto">50</span>
+                    </a>
+                    <a href="sampah-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-recycle"></i>
+                        <span>Data Sampah</span>
+                    </a>
+                </div>
+
+                <div class="menu-label ps-3 mb-2 mt-4">
+                    <small class="text-white-50 text-uppercase">Analisis</small>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="laporan-admin.html" class="list-group-item list-group-item-action" id="laporanLink">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        <span>Laporan</span>
+                    </a>
+                    <a href="pengaturan-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog me-2"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-divider my-2"></div>
+
+            <div class="sidebar-footer p-3">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User" class="rounded-circle me-2" width="32">
+                    <div class="user-info">
+                        <h6 class="mb-0">Admin User</h6>
+                        <small class="text-white-50">Super Admin</small>
+                    </div>
+                </div>
+                <a href="#help" class="btn btn-outline-light btn-sm w-100">
+                    <i class="fas fa-question-circle me-2"></i>Bantuan
+                </a>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Topbar -->
+            <nav class="navbar navbar-expand navbar-light bg-white">
+                <div class="container-fluid">
+                    <button class="btn btn-link" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger">3</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Pengguna baru mendaftar</a></li>
+                                <li><a class="dropdown-item" href="#">Permintaan verifikasi</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-shield me-2"></i>Admin
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">Profil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="index.html">Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid py-4">
+                <!-- Statistik Pengguna -->
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card bg-gradient-primary h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="text-xs text-uppercase mb-1">Total Pengguna</div>
+                                        <div class="h3 mb-0 font-weight-bold">50</div>
+                                        <div class="mt-2 small">
+                                            <i class="fas fa-check-circle me-1"></i>8 pengguna baru bulan ini
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-users fa-2x text-white-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card bg-gradient-success h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="text-xs text-uppercase mb-1">Pengguna Aktif</div>
+                                        <div class="h3 mb-0 font-weight-bold">35</div>
+                                        <div class="mt-2 small">
+                                            <i class="fas fa-check-circle me-1"></i>70% dari total
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user-check fa-2x text-white-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card bg-gradient-warning h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="text-xs text-uppercase mb-1">Menunggu Verifikasi</div>
+                                        <div class="h3 mb-0 font-weight-bold">5</div>
+                                        <div class="mt-2 small">
+                                            <i class="fas fa-clock me-1"></i>Perlu ditinjau
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-user-clock fa-2x text-white-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card bg-gradient-info h-100">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <div class="text-xs text-uppercase mb-1">Kontribusi Rata-rata</div>
+                                        <div class="h3 mb-0 font-weight-bold">2.5 Kg</div>
+                                        <div class="mt-2 small">
+                                            <i class="fas fa-recycle me-1"></i>per pengguna
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-chart-line fa-2x text-white-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel Pengguna -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-success">Data Pengguna</h6>
+                        <div class="d-flex gap-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Cari pengguna...">
+                                <button class="btn btn-outline-success"><i class="fas fa-search"></i></button>
+                            </div>
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                <i class="fas fa-user-plus me-2"></i>Tambah Pengguna
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nama</th>
+                                        <th>Email</th>
+                                        <th>Alamat</th>
+                                        <th>Total Kontribusi</th>
+                                        <th>Total Poin</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#001</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Budi+Santoso" class="rounded-circle me-2" width="30">
+                                                Budi Santoso
+                                            </div>
+                                        </td>
+                                        <td>budi@email.com</td>
+                                        <td>Jl. Pahlawan No. 123, Tasikmalaya</td>
+                                        <td>15 Kg</td>
+                                        <td>75</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info" title="Edit" data-bs-toggle="modal" data-bs-target="#editUserModal"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-success" title="Detail" data-bs-toggle="modal" data-bs-target="#historyModal"><i class="fas fa-history"></i></button>
+                                                <button class="btn btn-sm btn-warning" title="Suspend"><i class="fas fa-ban"></i></button>
+                                                <button class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#002</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Ani+Wijaya" class="rounded-circle me-2" width="30">
+                                                Ani Wijaya
+                                            </div>
+                                        </td>
+                                        <td>ani@email.com</td>
+                                        <td>Jl. Merdeka No. 45, Jakarta</td>
+                                        <td>8 Kg</td>
+                                        <td>40</td>
+                                        <td><span class="badge bg-success">Aktif</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info" title="Edit"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-success" title="Detail"><i class="fas fa-history"></i></button>
+                                                <button class="btn btn-sm btn-warning" title="Suspend"><i class="fas fa-ban"></i></button>
+                                                <button class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#003</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=Siti+Rahayu" class="rounded-circle me-2" width="30">
+                                                Siti Rahayu
+                                            </div>
+                                        </td>
+                                        <td>siti@email.com</td>
+                                        <td>Jl. Sudirman No. 78, Bandung</td>
+                                        <td>12 Kg</td>
+                                        <td>60</td>
+                                        <td><span class="badge bg-warning text-dark">Menunggu Verifikasi</span></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-info" title="Edit"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-success" title="Detail"><i class="fas fa-history"></i></button>
+                                                <button class="btn btn-sm btn-warning" title="Suspend"><i class="fas fa-ban"></i></button>
+                                                <button class="btn btn-sm btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav aria-label="Page navigation" class="mt-4">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Modal Tambah Pengguna -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Pengguna Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Alamat</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option>Aktif</option>
+                                <option>Tidak Aktif</option>
+                                <option>Menunggu Verifikasi</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Riwayat Setoran -->
+    <div class="modal fade" id="historyModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Riwayat Setoran Sampah - Budi Santoso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Jenis Sampah</th>
+                                    <th>Jumlah (Kg)</th>
+                                    <th>Poin</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15 Jan 2025</td>
+                                    <td>Plastik</td>
+                                    <td>5</td>
+                                    <td>25</td>
+                                    <td><span class="badge bg-success">Diterima</span></td>
+                                </tr>
+                                <tr>
+                                    <td>10 Jan 2025</td>
+                                    <td>Kertas</td>
+                                    <td>3</td>
+                                    <td>15</td>
+                                    <td><span class="badge bg-success">Diterima</span></td>
+                                </tr>
+                                <tr>
+                                    <td>5 Jan 2025</td>
+                                    <td>Logam</td>
+                                    <td>2</td>
+                                    <td>20</td>
+                                    <td><span class="badge bg-success">Diterima</span></td>
+                                </tr>
+                                <tr>
+                                    <td>28 Des 2023</td>
+                                    <td>Plastik</td>
+                                    <td>4</td>
+                                    <td>15</td>
+                                    <td><span class="badge bg-success">Diterima</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-between">
+                        <div>
+                            <strong>Total Kontribusi:</strong> 15 Kg
+                        </div>
+                        <div>
+                            <strong>Total Poin:</strong> 75
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-success">Cetak Laporan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Pengguna -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Pengguna</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" value="Budi Santoso" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="budi@email.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Alamat</label>
+                            <textarea class="form-control" rows="3">Jl. Pahlawan No. 123, Tasikmalaya</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select">
+                                <option selected>Aktif</option>
+                                <option>Tidak Aktif</option>
+                                <option>Suspend</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Simpan Perubahan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/dashboard.js"></script>
+    <script src="/js/footer-loader.js"></script>
+    
+    <!-- Script untuk mengubah warna latar Laporan saat diklik -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const laporanLink = document.getElementById('laporanLink');
+            
+            laporanLink.addEventListener('click', function(e) {
+                // Simpan URL tujuan
+                const targetUrl = this.href;
+                
+                // Hentikan navigasi default
+                e.preventDefault();
+                
+                // Ubah warna latar belakang menjadi #35ad02
+                this.style.backgroundColor = '#35ad02';
+                this.style.color = 'white';
+                
+                // Tambahkan efek transisi
+                this.style.transition = 'background-color 0.3s ease';
+                
+                // Arahkan ke halaman setelah penundaan singkat
+                setTimeout(function() {
+                    window.location.href = targetUrl;
+                }, 300);
+            });
+            
+            // Periksa apakah halaman saat ini adalah laporan-admin.html
+            if (window.location.href.includes('laporan-admin.html')) {
+                laporanLink.style.backgroundColor = '#35ad02';
+                laporanLink.style.color = 'white';
+            }
+        });
+    </script>
+    
+    <!-- Script untuk mengubah warna menu Pengguna -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pastikan link Pengguna berwarna #35ad02
+            const usersLink = document.querySelector('.users-item');
+            if (usersLink) {
+                usersLink.style.backgroundColor = '#35ad02';
+                usersLink.style.borderColor = '#35ad02';
+            }
+        });
+
+        // Script to handle sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    
+                    // For mobile
+                    if (window.innerWidth < 992) {
+                        document.body.classList.toggle('sidebar-mobile-open');
+                    }
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992 && 
+                    !event.target.closest('.sidebar') && 
+                    !event.target.closest('#sidebarToggle') && 
+                    document.body.classList.contains('sidebar-mobile-open')) {
+                    document.body.classList.remove('sidebar-mobile-open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
