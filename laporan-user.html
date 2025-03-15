@@ -3,17 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Sampah - Trash2Cash</title>
+    <title>Admin Dashboard - Trash2Cash</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/dashboard.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Sidebar styles */
+        :root {
+            --cream-color: #F5F5DC;
+            --dark-gray: #444444;
+            --text-dark: #333333;
+        }
+        
+        body {
+            background-color: var(--cream-color);
+            color: var(--text-dark);
+        }
+        
+        /* Animasi hover pada tabel */
+        .table tbody tr {
+            transition: all 0.2s ease-in-out;
+        }
+        .table tbody tr:hover {
+            background-color: rgba(68, 68, 68, 0.05) !important;
+            transform: scale(1.01);
+        }
+
+        /* Kartu statistik dengan gradien */
+        .stat-card {
+            border: none;
+            transition: transform 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card.success-gradient {
+            background: linear-gradient(45deg, var(--dark-gray), #555555);
+        }
+        .stat-card.info-gradient {
+            background: linear-gradient(45deg, #555555, #666666);
+        }
+        .stat-card.warning-gradient {
+            background: linear-gradient(45deg, #777777, #888888);
+        }
+        .stat-card.danger-gradient {
+            background: linear-gradient(45deg, #666666, #777777);
+        }
+
+        /* Badge status yang lebih menarik */
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+        
+        /* Style untuk menu Laporan berwarna #35ad02 */
+        .list-group-item.active.laporan-item {
+            background-color: var(--dark-gray) !important;
+            border-color: var(--dark-gray) !important;
+        }
+        
+        /* Style untuk grafik & chart */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .chart-stat {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            height: 100%;
+        }
+        
+        .chart-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Filter container styling */
+        .filter-container {
+            padding: 1.5rem;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Sidebar styles to match pengaturan-admin.html */
         .sidebar {
             width: 280px;
             min-height: 100vh;
-            background-color: #444444; /* Changed from #198754 to dark gray */
+            background-color: var(--dark-gray);
             position: fixed;
             transition: all 0.3s ease-in-out;
             z-index: 1000;
@@ -24,7 +105,7 @@
             width: calc(100% - 280px);
             min-height: 100vh;
             transition: all 0.3s ease-in-out;
-            background-color: #F5F5DC; /* Added cream background */
+            background-color: var(--cream-color);
         }
         
         /* When sidebar is toggled/collapsed */
@@ -56,15 +137,19 @@
             background-color: transparent;
             border: none;
             border-radius: 0 !important;
-            color: rgba(245, 245, 220, 0.8); /* Changed to cream */
+            color: var(--cream-color);
             padding: 0.75rem 1.25rem;
             margin-bottom: 0;
         }
 
         .sidebar .list-group-item.active {
-            background-color: rgba(245, 245, 220, 0.2); /* Changed to cream with opacity */
-            border-left: 3px solid #F5F5DC; /* Changed to cream */
-            color: #F5F5DC; /* Changed to cream */
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid var(--cream-color);
+            color: #fff;
+        }
+        
+        .sidebar .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .sidebar .list-group-item i {
@@ -75,176 +160,101 @@
 
         .sidebar-divider {
             height: 1px;
-            background-color: rgba(245, 245, 220, 0.2); /* Changed to cream with opacity */
+            background-color: rgba(255, 255, 255, 0.2);
             margin: 1rem 0;
         }
-
-        /* Alert success styles */
-        .alert-success {
-            border: none;
-            border-radius: 1rem;
-            background: rgba(68, 68, 68, 0.1); /* Changed from #198754 to dark gray */
-            border-left: 4px solid #444444; /* Changed from #198754 to dark gray */
-            color: #333333; /* Changed to dark gray */
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-success {
-            background-color: #444444 !important; /* Changed from #198754 to dark gray */
-            border-color: #444444 !important; /* Changed from #198754 to dark gray */
-            color: #F5F5DC !important; /* Changed to cream */
-            box-shadow: 0 4px 6px rgba(68, 68, 68, 0.15); /* Changed from #198754 to dark gray */
-        }
-
-        .btn-success:hover {
-            background-color: #333333 !important; /* Darker version for hover */
-            border-color: #333333 !important; /* Darker version for hover */
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(68, 68, 68, 0.2); /* Changed from #198754 to dark gray */
-        }
         
-        .btn-secondary {
-            background-color: #F5F5DC !important; /* Changed to cream */
-            border-color: #E5E5CC !important; /* Slightly darker cream for border */
-            color: #333333 !important; /* Changed to dark gray */
-        }
-        .btn-secondary:hover {
-            background-color: #E5E5CC !important; /* Slightly darker cream for hover */
-            border-color: #D5D5BC !important;
-        }
-
-        .list-group-item {
-            padding: 1rem;
-            border: none;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .badge {
-            padding: 0.5em 1em;
-            font-weight: 500;
-            border-radius: 0.5rem;
-        }
-
-        /* Efek hover pada card */
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        /* Styling untuk file input */
-        .form-control[type="file"] {
-            padding: 0.5rem;
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-        }
-
-        .form-control[type="file"]:hover {
-            background: #fff;
-            border-color: #198754;
-        }
-
-        /* Styling untuk textarea */
-        textarea.form-control {
-            min-height: 120px;
-            resize: none;
-        }
-
-        /* Label styling */
-        .form-label {
-            font-weight: 500;
-            color: #495057;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Status badge styling */
-        .badge.bg-success {
-            background: rgba(68, 68, 68, 0.1) !important; /* Changed from #198754 to dark gray */
-            color: #444444 !important; /* Changed from #198754 to dark gray */
-        }
-
-        .badge.bg-warning {
-            background: rgba(255, 193, 7, 0.1) !important;
-            color: #ffc107;
-        }
-
-        /* Card header styling */
-        .card-header {
-            background: transparent;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        /* Section spacing */
-        .mb-4 {
-            margin-bottom: 2rem !important;
-        }
-
-        /* Small text styling */
-        .text-muted {
-            font-size: 0.875rem;
-        }
-
-        /* Card */
+        /* Card styling */
         .card {
-            background-color: white;
+            background-color: #ffffff;
             border: none;
-            border-radius: 1rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
         
-        /* Text colors */
-        .text-success {
-            color: #444444 !important; /* Changed from #198754 to dark gray */
+        .card-header {
+            background-color: #ffffff;
         }
         
-        /* Background colors */
-        .bg-success {
-            background-color: #444444 !important; /* Changed from #198754 to dark gray */
+        /* Button styling */
+        .btn-success {
+            background-color: var(--dark-gray);
+            border-color: var(--dark-gray);
+            color: #ffffff;
+        }
+
+        .btn-success:hover, .btn-success:focus {
+            background-color: #333333;
+            border-color: #333333;
         }
         
-        /* Button outline */
+        .btn-primary {
+            background-color: #555555;
+            border-color: #555555;
+        }
+
         .btn-outline-success {
-            color: #444444 !important; /* Changed from #198754 to dark gray */
-            border-color: #444444 !important; /* Changed from #198754 to dark gray */
+            color: var(--dark-gray);
+            border-color: var(--dark-gray);
         }
+
         .btn-outline-success:hover {
-            background-color: #444444 !important; /* Changed from #198754 to dark gray */
-            color: #F5F5DC !important; /* Changed to cream */
+            background-color: var(--dark-gray);
+            color: #ffffff;
+        }
+
+        .btn-outline-secondary {
+            color: var(--dark-gray);
+            border-color: var(--dark-gray);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--cream-color);
         }
         
-        /* Navbar */
-        .navbar {
-            background-color: #F5F5DC !important; /* Changed to cream */
+        /* New color classes */
+        .bg-gradient-success {
+            background: linear-gradient(45deg, var(--dark-gray), #555555) !important;
         }
         
-        .navbar .nav-link {
-            color: #333333 !important; /* Changed to dark gray */
+        .text-success {
+            color: var(--dark-gray) !important;
         }
         
-        /* Body */
-        body {
-            background-color: #F5F5DC; /* Changed to cream */
-            color: #333333; /* Changed to dark gray */
+        .font-weight-bold.text-success {
+            color: var(--dark-gray) !important;
         }
         
-        /* Form tabs */
-        .nav-tabs .nav-link.active {
-            color: #444444; /* Changed from #198754 to dark gray */
-            border-bottom: 2px solid #444444; /* Changed from #198754 to dark gray */
+        /* Badge styling */
+        .badge.bg-success {
+            background-color: var(--dark-gray) !important;
+        }
+        
+        .badge.bg-white, .badge.bg-light {
+            background-color: var(--cream-color) !important;
+        }
+        
+        /* Footer styling */
+        .footer {
+            background-color: var(--dark-gray);
+            color: var(--cream-color);
+        }
+        
+        .footer a {
+            color: var(--cream-color);
+        }
+        
+        .footer a:hover {
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
     <div class="d-flex">
-        <!-- Sidebar -->
+        <!-- Sidebar yang diperbarui -->
         <div class="sidebar text-white">
             <div class="sidebar-header p-3 d-flex align-items-center gap-3">
-                <img src="/img/logo.png" alt="Logo" height="35" class="rounded">
+                <img src="img/logo.png" alt="Trash2Cash" height="35" class="rounded">
             </div>
             
             <div class="sidebar-divider my-2"></div>
@@ -254,30 +264,32 @@
                     <small class="text-white-50 text-uppercase">Menu Utama</small>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="dashboard-user.html" class="list-group-item list-group-item-action">
-                        <i class="fas fa-home me-2"></i>
-                        <span>Overview</span>
+                    <a href="dashboard-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <span class="badge rounded-pill bg-white text-success ms-auto">6</span>
                     </a>
-                    <a href="laporan-user.html" class="list-group-item list-group-item-action active">
-                        <i class="fas fa-plus-circle me-2"></i>
-                        <span>Lapor Sampah</span>
+                    <a href="users-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-users"></i>
+                        <span>Pengguna</span>
+                        <span class="badge rounded-pill bg-light text-dark ms-auto">50</span>
                     </a>
-                    <a href="history-user.html" class="list-group-item list-group-item-action">
-                        <i class="fas fa-history me-2"></i>
-                        <span>Riwayat</span>
-                    </a>
-                    <a href="poin-user.html" class="list-group-item list-group-item-action">
-                        <i class="fas fa-star me-2"></i>
-                        <span>Penukaran Poin</span>
+                    <a href="sampah-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-recycle"></i>
+                        <span>Data Sampah</span>
                     </a>
                 </div>
 
                 <div class="menu-label ps-3 mb-2 mt-4">
-                    <small class="text-white-50 text-uppercase">Setting</small>
+                    <small class="text-white-50 text-uppercase">Analisis</small>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="pengaturan-user.html" class="list-group-item list-group-item-action">
-                        <i class="fas fa-cog me-2"></i>
+                    <a href="laporan-admin.html" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Laporan</span>
+                    </a>
+                    <a href="pengaturan-admin.html" class="list-group-item list-group-item-action">
+                        <i class="fas fa-cog"></i>
                         <span>Pengaturan</span>
                     </a>
                 </div>
@@ -287,10 +299,10 @@
 
             <div class="sidebar-footer p-3">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="https://ui-avatars.com/api/?name=User+Name" class="rounded-circle me-2" width="32">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User" class="rounded-circle me-2" width="32">
                     <div class="user-info">
-                        <h6 class="mb-0">User Name</h6>
-                        <small class="text-white-50">Member</small>
+                        <h6 class="mb-0">Admin User</h6>
+                        <small class="text-white-50">Super Admin</small>
                     </div>
                 </div>
                 <a href="#help" class="btn btn-outline-light btn-sm w-100">
@@ -308,12 +320,22 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-2"></i>User Name
+                        <li class="nav-item dropdown me-3">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger">3</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Laporan baru</a></li>
+                                <li><a class="dropdown-item" href="#">Pengajuan menunggu</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-shield me-2"></i>Admin
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#profile">Profil</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="index.html">Logout</a></li>
                             </ul>
@@ -324,478 +346,465 @@
 
             <!-- Main Content -->
             <div class="container-fluid py-4">
-                <!-- Tab Navigation -->
-                <ul class="nav nav-tabs mb-4">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#formLaporan">
-                            <i class="fas fa-plus-circle me-2"></i>Lapor Sampah
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#lihatLaporan">
-                            <i class="fas fa-chart-bar me-2"></i>Lihat Laporan
-                        </a>
-                    </li>
-                </ul>
-                
-                <!-- Tab Content -->
-                <div class="tab-content">
-                    <!-- Form Pelaporan Tab -->
-                    <div class="tab-pane fade show active" id="formLaporan">
-                        <div class="row">
-                            <div class="col-xl-8">
-                                <div class="card shadow">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-success">Form Lapor Sampah</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <form>
-                                            <div class="row mb-4">
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Jumlah Sampah (Kg)</label>
-                                                        <input type="number" class="form-control" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Kategori Sampah</label>
-                                                        <select class="form-select" required>
-                                                            <option value="">Pilih kategori sampah...</option>
-                                                            <option>Plastik</option>
-                                                            <option>Kertas/Kardus</option>
-                                                            <option>Logam</option>
-                                                            <option>Kaca</option>
-                                                            <option>Elektronik</option>
-                                                            <option>Organik</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Tanggal Pengumpulan</label>
-                                                        <input type="date" class="form-control" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Lokasi Pengumpulan</label>
-                                                        <select class="form-select" required>
-                                                            <option value="">Pilih lokasi...</option>
-                                                            <option>Drop Point A</option>
-                                                            <option>Drop Point B</option>
-                                                            <option>Drop Point C</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label class="form-label">Upload Foto Sampah</label>
-                                                <input type="file" class="form-control" accept="image/*" required>
-                                                <small class="text-muted">Format: JPG, PNG. Maksimal 2MB</small>
-                                            </div>
-
-                                            <div class="mb-4">
-                                                <label class="form-label">Catatan Tambahan</label>
-                                                <textarea class="form-control" rows="3" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
-                                            </div>
-
-                                            <div class="d-grid">
-                                                <button type="submit" class="btn btn-success">
-                                                    <i class="fas fa-paper-plane me-2"></i>Kirim Laporan
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                <!-- Quick Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-gradient-success text-white">
+                            <div class="card-body">
+                                <h6 class="text-white">Total Pengumpulan</h6>
+                                <h3 class="mb-0">250 Kg</h3>
+                                <small><i class="fas fa-arrow-up"></i> 15% dari bulan lalu</small>
                             </div>
-
-                            <!-- Informasi Bantuan -->
-                            <div class="col-xl-4">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-success">Panduan Pelaporan</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="alert alert-success" role="alert">
-                                            <h6 class="alert-heading mb-1"><i class="fas fa-info-circle me-2"></i>Tips Pelaporan</h6>
-                                            <ul class="mb-0 ps-3 mt-2">
-                                                <li>Pisahkan sampah sesuai kategori</li>
-                                                <li>Bersihkan sampah sebelum disetor</li>
-                                                <li>Foto harus jelas dan menunjukkan jumlah sampah</li>
-                                                <li>Pilih lokasi pengumpulan terdekat</li>
-                                            </ul>
-                                        </div>
-                                        
-                                        <div class="card mb-3">
-                                            <div class="card-body">
-                                                <h6 class="card-title">Estimasi Poin</h6>
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        Plastik
-                                                        <span class="badge bg-success">5 poin/Kg</span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        Kertas
-                                                        <span class="badge bg-success">3 poin/Kg</span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        Logam
-                                                        <span class="badge bg-success">10 poin/Kg</span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        Kaca
-                                                        <span class="badge bg-success">4 poin/Kg</span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        Organik
-                                                        <span class="badge bg-success">2 poin/Kg</span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                        Elektronik
-                                                        <span class="badge bg-success">15 poin/Kg</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="d-grid gap-2">
-                                            <button class="btn btn-outline-success" type="button">
-                                                <i class="fas fa-phone me-2"></i>Hubungi Admin
-                                            </button>
-                                            <button class="btn btn-outline-success" type="button">
-                                                <i class="fas fa-question-circle me-2"></i>FAQ
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Status Terakhir -->
-                                <div class="card shadow">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-success">Status Terakhir</h6>
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <div class="list-group list-group-flush">
-                                            <div class="list-group-item">
-                                                <div class="d-flex w-100 justify-content-between mb-1">
-                                                    <h6 class="mb-1">Pengumpulan #SPH001</h6>
-                                                    <small class="text-muted">2 hari yang lalu</small>
-                                                </div>
-                                                <p class="mb-1">Plastik (3Kg)</p>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <span class="badge bg-success">Diterima</span>
-                                                    <small class="text-success">+15 poin</small>
-                                                </div>
-                                            </div>
-                                            <div class="list-group-item">
-                                                <div class="d-flex w-100 justify-content-between mb-1">
-                                                    <h6 class="mb-1">Pengumpulan #SPH002</h6>
-                                                    <small class="text-muted">5 hari yang lalu</small>
-                                                </div>
-                                                <p class="mb-1">Kertas (2Kg)</p>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <span class="badge bg-warning text-dark">Menunggu</span>
-                                                    <small class="text-warning">Estimasi: +6 poin</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h6 class="text-white">Total Poin Diberikan</h6>
+                                <h3 class="mb-0">1,250</h3>
+                                <small><i class="fas fa-star"></i> Dari 50 pengguna aktif</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning">
+                            <div class="card-body">
+                                <h6>Pengumpul Aktif</h6>
+                                <h3 class="mb-0">35</h3>
+                                <small>Dari 50 terdaftar</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info">
+                            <div class="card-body">
+                                <h6>Pencapaian Target</h6>
+                                <h3 class="mb-0">75%</h3>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar" style="width: 75%"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Lihat Laporan Tab -->
-                    <div class="tab-pane fade" id="lihatLaporan">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card shadow mb-4">
-                                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                                        <h6 class="m-0 font-weight-bold text-success">Laporan Setoran Sampah</h6>
-                                        <div class="d-flex gap-2">
-                                            <select class="form-select form-select-sm" style="width: auto">
-                                                <option>7 Hari Terakhir</option>
-                                                <option>30 Hari Terakhir</option>
-                                                <option>3 Bulan Terakhir</option>
-                                                <option>Semua Waktu</option>
-                                            </select>
-                                            <button class="btn btn-sm btn-success">
-                                                <i class="fas fa-file-pdf me-2"></i>Download PDF
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <!-- Summary Cards -->
-                                        <div class="row mb-4">
-                                            <div class="col-md-3">
-                                                <div class="card bg-light">
-                                                    <div class="card-body">
-                                                        <h6 class="text-success">Total Sampah</h6>
-                                                        <h3 class="mb-0">15 Kg</h3>
-                                                        <small class="text-muted">Periode yang dipilih</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="card bg-light">
-                                                    <div class="card-body">
-                                                        <h6 class="text-success">Total Poin</h6>
-                                                        <h3 class="mb-0">75</h3>
-                                                        <small class="text-muted">Periode yang dipilih</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="card bg-light">
-                                                    <div class="card-body">
-                                                        <h6 class="text-success">Kategori Terbanyak</h6>
-                                                        <h3 class="mb-0">Plastik</h3>
-                                                        <small class="text-muted">5 Kg (33%)</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="card bg-light">
-                                                    <div class="card-body">
-                                                        <h6 class="text-success">Peringkat</h6>
-                                                        <h3 class="mb-0">#15</h3>
-                                                        <small class="text-muted">Dari 50 pengguna</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Graphs -->
-                                        <div class="row mb-4">
-                                            <div class="col-md-6">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h6 class="card-title">Kontribusi per Kategori</h6>
-                                                        <canvas id="categoryChart" height="250"></canvas>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <h6 class="card-title">Tren Kontribusi</h6>
-                                                        <canvas id="trendChart" height="250"></canvas>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Detailed Table -->
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Tanggal</th>
-                                                        <th>ID</th>
-                                                        <th>Kategori</th>
-                                                        <th>Jumlah (Kg)</th>
-                                                        <th>Poin</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>15 Mar 2025</td>
-                                                        <td>#SPH001</td>
-                                                        <td>Plastik</td>
-                                                        <td>3</td>
-                                                        <td>15</td>
-                                                        <td><span class="badge bg-success">Diterima</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>12 Mar 2025</td>
-                                                        <td>#SPH002</td>
-                                                        <td>Kertas</td>
-                                                        <td>2</td>
-                                                        <td>6</td>
-                                                        <td><span class="badge bg-warning text-dark">Menunggu</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>25 Feb 2025</td>
-                                                        <td>#SPH003</td>
-                                                        <td>Logam</td>
-                                                        <td>1</td>
-                                                        <td>10</td>
-                                                        <td><span class="badge bg-success">Diterima</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>15 Feb 2025</td>
-                                                        <td>#SPH004</td>
-                                                        <td>Plastik</td>
-                                                        <td>4</td>
-                                                        <td>20</td>
-                                                        <td><span class="badge bg-success">Diterima</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>03 Feb 2025</td>
-                                                        <td>#SPH005</td>
-                                                        <td>Kaca</td>
-                                                        <td>2</td>
-                                                        <td>8</td>
-                                                        <td><span class="badge bg-success">Diterima</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>22 Jan 2025</td>
-                                                        <td>#SPH006</td>
-                                                        <td>Organik</td>
-                                                        <td>3</td>
-                                                        <td>6</td>
-                                                        <td><span class="badge bg-success">Diterima</span></td>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr class="table-light">
-                                                        <th colspan="3">Total</th>
-                                                        <th>15 Kg</th>
-                                                        <th>65 poin</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                    </div>
+                </div>
+
+                <!-- Enhanced Filter Controls -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-success">Filter & Kustomisasi</h6>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" data-bs-target="#filterOptions">
+                                <i class="fas fa-sliders-h me-1"></i>Opsi Filter
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" id="saveView">
+                                <i class="fas fa-bookmark me-1"></i>Simpan Tampilan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body collapse" id="filterOptions">
+                        <form class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Periode</label>
+                                <select class="form-select">
+                                    <option selected>Semua Periode</option>
+                                    <option>Harian</option>
+                                    <option>Mingguan</option>
+                                    <option>Bulanan</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Jenis Sampah</label>
+                                <select class="form-select" multiple>
+                                    <option selected>Plastik</option>
+                                    <option>Kertas/Kardus</option>
+                                    <option>Logam</option>
+                                    <option>Kaca</option>
+                                    <option>Elektronik</option>
+                                    <option>Organik</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Status Laporan</label>
+                                <select class="form-select">
+                                    <option selected>Semua Status</option>
+                                    <option>Selesai</option>
+                                    <option>Proses</option>
+                                    <option>Pending</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tampilkan</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked>
+                                    <label class="form-check-label">Grafik</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" checked>
+                                    <label class="form-check-label">Tabel Detail</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Interactive Charts with Tooltips -->
+                <div class="row" id="chartSection">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-success">Perbandingan Pengumpulan Sampah</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="wasteComparisonChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-success">Distribusi Jenis Sampah</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="wasteTypeChart" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Table with Actions -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-success">Riwayat Laporan Detail</h6>
+                        <div class="d-flex gap-2 align-items-center">
+                            <div class="input-group input-group-sm" style="width: 200px;">
+                                <input type="text" class="form-control" placeholder="Cari laporan...">
+                                <button class="btn btn-outline-secondary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-success dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class="fas fa-download me-1"></i>Export
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#"><i class="far fa-file-pdf me-2"></i>PDF</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="far fa-file-excel me-2"></i>Excel</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="far fa-file-csv me-2"></i>CSV</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Periode</th>
+                                        <th>Total Sampah (Kg)</th>
+                                        <th>Jumlah Pengguna</th>
+                                        <th>Total Poin</th>
+                                        <th>Kategori Terbanyak</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Januari 2025</td>
+                                        <td>75 Kg</td>
+                                        <td>35</td>
+                                        <td>375</td>
+                                        <td>Plastik (40%)</td>
+                                        <td><span class="badge bg-success">Selesai</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" title="Download"><i class="fas fa-download"></i></button>
+                                            <button class="btn btn-sm btn-success" title="Lihat Detail"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Desember 2023</td>
+                                        <td>60 Kg</td>
+                                        <td>30</td>
+                                        <td>300</td>
+                                        <td>Kertas (35%)</td>
+                                        <td><span class="badge bg-success">Selesai</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" title="Download"><i class="fas fa-download"></i></button>
+                                            <button class="btn btn-sm btn-success" title="Lihat Detail"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>November 2023</td>
+                                        <td>65 Kg</td>
+                                        <td>28</td>
+                                        <td>325</td>
+                                        <td>Logam (30%)</td>
+                                        <td><span class="badge bg-success">Selesai</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" title="Download"><i class="fas fa-download"></i></button>
+                                            <button class="btn btn-sm btn-success" title="Lihat Detail"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h6 class="font-weight-bold">Opsi Laporan</h6>
+                            <div class="row g-2">
+                                <div class="col-md-3">
+                                    <label class="form-label">Jenis Laporan</label>
+                                    <select class="form-select form-select-sm">
+                                        <option>Harian</option>
+                                        <option>Mingguan</option>
+                                        <option selected>Bulanan</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Format</label>
+                                    <select class="form-select form-select-sm">
+                                        <option>PDF</option>
+                                        <option selected>Excel</option>
+                                        <option>CSV</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Pilih Periode</label>
+                                    <input type="month" class="form-control form-control-sm" value="2025-01">
+                                </div>
+                                <div class="col-md-3 d-flex align-items-end">
+                                    <button class="btn btn-success">
+                                        <i class="fas fa-file-export me-2"></i>Generate Laporan
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Floating Action Button for Quick Actions -->
+                <div class="position-fixed bottom-0 end-0 p-3">
+                    <div class="btn-group-vertical shadow">
+                        <button class="btn btn-success rounded-circle mb-2" title="Tambah Laporan Baru" style="width: 45px; height: 45px;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="btn btn-primary rounded-circle" title="Bantuan" style="width: 45px; height: 45px;">
+                            <i class="fas fa-question"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/dashboard.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
 
-    <!-- Tambahan Script untuk Grafik -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Category Chart
-            new Chart(document.getElementById('categoryChart'), {
-                type: 'pie',
-                data: {
-                    labels: ['Plastik', 'Kertas', 'Logam', 'Kaca', 'Organik', 'Elektronik'],
-                    datasets: [{
-                        data: [7, 2, 1, 2, 3, 1.5],
-                        backgroundColor: ['#198754', '#ffc107', '#0dcaf0', '#6c757d', '#fd7e14', '#6610f2']
-                    }]
-                }
-            });
-            
-            // Trend Chart
-            new Chart(document.getElementById('trendChart'), {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
-                    datasets: [{
-                        label: 'Kontribusi Sampah (Kg)',
-                        data: [2, 5, 5, 0, 0, 0],
-                        borderColor: '#198754',
-                        tension: 0.1,
-                        fill: false
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
-    <!-- QR Scanner Button -->
-    <div class="position-fixed bottom-0 end-0 p-4" style="z-index: 1030;">
-        <button class="btn btn-success btn-lg rounded-circle shadow d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;" data-bs-toggle="modal" data-bs-target="#qrScannerModal">
-            <i class="fas fa-qrcode"></i>
-        </button>
-    </div>
-
-    <!-- QR Scanner Modal -->
-    <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- Save View Modal -->
+    <div class="modal fade" id="saveViewModel" tabindex="-1">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Scan QR Code</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Simpan Tampilan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-0">
-                    <div id="qrScannerContainer" class="position-relative" style="min-height: 300px;">
-                        <video id="qrScanner" class="w-100"></video>
-                        <div class="position-absolute top-50 start-50 translate-middle text-center" id="qrScannerPlaceholder">
-                            <i class="fas fa-camera fa-3x text-muted mb-2"></i>
-                            <p>Meminta akses kamera...</p>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Nama Tampilan</label>
+                            <input type="text" class="form-control" placeholder="Contoh: Laporan Bulanan">
                         </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox">
+                            <label class="form-check-label">Jadikan Default</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Report Modal -->
+    <div class="modal fade" id="detailReportModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Laporan - Januari 2025</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>Informasi Umum</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Periode</th>
+                                    <td>Januari 2025</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Sampah</th>
+                                    <td>75 Kg</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Poin</th>
+                                    <td>375</td>
+                                </tr>
+                                <tr>
+                                    <th>Pengguna Aktif</th>
+                                    <td>35 dari 50</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Perbandingan dengan Bulan Lalu</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Perubahan Jumlah</th>
+                                    <td class="text-success">+15 Kg (25%)</td>
+                                </tr>
+                                <tr>
+                                    <th>Perubahan Poin</th>
+                                    <td class="text-success">+75 (25%)</td>
+                                </tr>
+                                <tr>
+                                    <th>Perubahan Pengguna</th>
+                                    <td class="text-success">+5 (16.7%)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <h6>Distribusi per Kategori</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th>Jumlah (Kg)</th>
+                                    <th>Persentase</th>
+                                    <th>Poin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Plastik</td>
+                                    <td>30</td>
+                                    <td>40%</td>
+                                    <td>150</td>
+                                </tr>
+                                <tr>
+                                    <td>Kertas</td>
+                                    <td>15</td>
+                                    <td>20%</td>
+                                    <td>45</td>
+                                </tr>
+                                <tr>
+                                    <td>Logam</td>
+                                    <td>10</td>
+                                    <td>13.3%</td>
+                                    <td>100</td>
+                                </tr>
+                                <tr>
+                                    <td>Kaca</td>
+                                    <td>12</td>
+                                    <td>16%</td>
+                                    <td>48</td>
+                                </tr>
+                                <tr>
+                                    <td>Organik</td>
+                                    <td>8</td>
+                                    <td>10.7%</td>
+                                    <td>32</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-success">
+                        <i class="fas fa-download me-2"></i>Download PDF
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/footer-loader.js"></script>
     <script>
-        // QR Scanner functionality
-        let videoStream;
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize QR scanner when modal is shown
-            const qrScannerModal = document.getElementById('qrScannerModal');
-            qrScannerModal.addEventListener('shown.bs.modal', function() {
-                startQrScanner();
-            });
-            
-            // Stop camera when modal is hidden
-            qrScannerModal.addEventListener('hidden.bs.modal', function() {
-                stopQrScanner();
+        // Grafik Perbandingan Sampah
+        new Chart(document.getElementById('wasteComparisonChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                datasets: [{
+                    label: 'Sampah Terkumpul (Kg)',
+                    data: [75, 65, 70, 55, 60, 50],
+                    backgroundColor: '#444444'
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Total: ${context.raw} Kg`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Grafik Jenis Sampah
+        new Chart(document.getElementById('wasteTypeChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Plastik', 'Kertas', 'Logam', 'Kaca', 'Organik', 'Elektronik'],
+                datasets: [{
+                    data: [35, 20, 15, 15, 10, 5],
+                    backgroundColor: ['#444444', '#555555', '#666666', '#777777', '#888888', '#999999']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}%`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Tambahan JavaScript untuk interaktivitas
+        document.getElementById('saveView').addEventListener('click', () => {
+            const modal = new bootstrap.Modal(document.getElementById('saveViewModel'));
+            modal.show();
+        });
+
+        // Handling untuk lihat detail report
+        document.querySelectorAll('.btn-success[title="Lihat Detail"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const modal = new bootstrap.Modal(document.getElementById('detailReportModal'));
+                modal.show();
             });
         });
-        
-        function startQrScanner() {
-            const video = document.getElementById('qrScanner');
-            const placeholder = document.getElementById('qrScannerPlaceholder');
-            
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                    .then(function(stream) {
-                        videoStream = stream;
-                        video.srcObject = stream;
-                        video.play();
-                        placeholder.style.display = 'none';
-                        
-                        // Here you would typically add QR code detection logic
-                        console.log("QR scanner started - add QR detection library for full functionality");
-                        
-                        // Mock successful scan after 3 seconds (for demo)
-                        setTimeout(() => {
-                            alert("QR Code terdeteksi: DROP-POINT-001");
-                        }, 3000);
-                    })
-                    .catch(function(error) {
-                        placeholder.innerHTML = `<i class="fas fa-exclamation-circle fa-3x text-danger mb-2"></i>
-                                                <p>Gagal mengakses kamera: ${error.message}</p>`;
-                        console.error("Error accessing camera: ", error);
-                    });
-            } else {
-                placeholder.innerHTML = `<i class="fas fa-exclamation-circle fa-3x text-danger mb-2"></i>
-                                        <p>Browser tidak mendukung akses kamera</p>`;
-                console.error("Browser does not support getUserMedia");
-            }
-        }
-        
-        function stopQrScanner() {
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => {
-                    track.stop();
-                });
-            }
-        }
 
         // Script to handle sidebar toggle
         document.addEventListener('DOMContentLoaded', function() {
@@ -821,6 +830,9 @@
                     document.body.classList.remove('sidebar-mobile-open');
                 }
             });
+            
+            // Additional wasteComparisonChart and wasteTypeChart code can remain here
+            // ...existing chart.js code...
         });
     </script>
 </body>
